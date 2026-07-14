@@ -147,6 +147,28 @@ input[type="range"]::-moz-range-thumb {
 .intensity-container { width: 100%; border-top: 1px solid var(--border-color); }
 .intensity-canvas { width: 100%; height: 160px; display: block; }
 .lab-controls { padding: 20px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Polarization lab */
+.pol-layout { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: start; margin-bottom: 16px; }
+.pol-controls { padding: 20px; }
+.pol-dial { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.pol-dial svg { cursor: pointer; touch-action: none; }
+.pol-dial-value { font-size: 13px; font-family: var(--font-mono); color: var(--accent-yellow); }
+.pol-meter { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; min-width: 180px; }
+.pol-meter-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.pol-meter-header span { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.pol-meter-value { font-size: 28px; font-weight: 700; font-family: var(--font-mono); color: var(--text-primary); margin-bottom: 10px; }
+.pol-meter-value small { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
+.pol-meter-bar { width: 100%; height: 8px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; }
+.pol-meter-fill { height: 100%; border-radius: 4px; transition: width 0.15s; }
+.pol-meter-pct { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 4px; font-family: var(--font-mono); }
+.pol-canvas-wrapper { padding: 0; overflow: hidden; margin-bottom: 16px; }
+.pol-malus { display: flex; align-items: center; justify-content: center; gap: 16px; font-size: 14px; font-family: var(--font-mono); padding: 16px; }
+.pol-malus-label { color: var(--text-muted); }
+.pol-malus-value { color: var(--accent-yellow); font-weight: 700; }
+@media (max-width: 768px) {
+  .pol-layout { grid-template-columns: 1fr; }
+}
 .controls-row { display: flex; gap: 20px; }
 .control-group { flex: 1; }
 .control-group label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
@@ -186,6 +208,9 @@ let activeView = 'labs';
 
 function navigate(view) {
   activeView = view;
+  if (typeof window.__dsCleanup === 'function') { window.__dsCleanup(); window.__dsCleanup = null; }
+  if (typeof window.__ssCleanup === 'function') { window.__ssCleanup(); window.__ssCleanup = null; }
+  if (typeof window.__polCleanup === 'function') { window.__polCleanup(); window.__polCleanup = null; }
   render();
 }
 
@@ -194,6 +219,7 @@ function render() {
   if (activeView === 'labs') renderLabs();
   else if (activeView === 'doubleslit') renderDoubleSlit();
   else if (activeView === 'singleslit') renderSingleSlit();
+  else if (activeView === 'polarization') renderPolarization();
 }
 
 // ---------- Labs page ----------
@@ -215,6 +241,12 @@ function renderLabs() {
           <div class="lab-card-icon">🔆</div>
           <h3 class="lab-card-title">Single Slit Diffraction</h3>
           <p class="lab-card-desc">Diffraction pattern from a single aperture — see how light spreads and creates a central maximum with secondary peaks.</p>
+          <div class="lab-card-action"><span>Launch Lab</span><span class="arrow">→</span></div>
+        </button>
+        <button class="lab-card glass-card" data-lab="polarization">
+          <div class="lab-card-icon">🔬</div>
+          <h3 class="lab-card-title">Polarization</h3>
+          <p class="lab-card-desc">Explore Malus's law with polarizers — see how light intensity changes as you rotate the analyzer relative to the polarizer.</p>
           <div class="lab-card-action"><span>Launch Lab</span><span class="arrow">→</span></div>
         </button>
       </div>
@@ -903,13 +935,271 @@ function renderSingleSlit() {
   };
 }
 
-// ---------- Cleanup on navigation ----------
-const origNavigate = navigate;
-navigate = function(view) {
-  if (typeof window.__dsCleanup === 'function') { window.__dsCleanup(); window.__dsCleanup = null; }
-  if (typeof window.__ssCleanup === 'function') { window.__ssCleanup(); window.__ssCleanup = null; }
-  origNavigate(view);
-};
+// ========================================================================
+// POLARIZATION — MALUS'S LAW
+// ========================================================================
+function renderPolarization() {
+  ROOT.innerHTML = `
+    <div class="lab-detail animate-fade-in">
+      <button class="back-btn" id="pol-back">← Back to Labs</button>
+      <div class="lab-detail-header">
+        <span class="lab-detail-icon">🔬</span>
+        <div>
+          <h1>Polarization — Malus's Law</h1>
+          <p class="lab-detail-desc">Study how the intensity of polarized light changes as it passes through a rotatable analyzer. Drag the dial to change the angle.</p>
+        </div>
+      </div>
+      <div class="pol-layout">
+        <div class="pol-controls glass-card-static">
+          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;font-weight:600;">Controls</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+            <span style="font-size:13px;color:var(--text-secondary);">Light Source</span>
+            <label class="toggle-label" id="pol-toggle-label">
+              <input type="checkbox" checked id="pol-source">
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono);">λ = 550 nm</div>
+        </div>
+        <div class="pol-dial">
+          <svg width="140" height="140" viewBox="0 0 140 140" id="pol-dial-svg">
+            <circle cx="70" cy="70" r="60" fill="none" stroke="#1e2438" stroke-width="2"/>
+          </svg>
+          <span class="pol-dial-value" id="pol-angle-display">0°</span>
+        </div>
+        <div class="pol-meter" id="pol-meter">
+          <div class="pol-meter-header"><span style="font-size:16px;">💡</span><span>Lux Meter</span></div>
+          <div class="pol-meter-value" id="pol-lux-value">100.0<small>lux</small></div>
+          <div class="pol-meter-bar"><div class="pol-meter-fill" id="pol-meter-fill" style="width:100%;background:linear-gradient(90deg,#854d0e,#eab308)"></div></div>
+          <div class="pol-meter-pct" id="pol-meter-pct">100%</div>
+        </div>
+      </div>
+      <div class="pol-canvas-wrapper glass-card-static">
+        <canvas id="pol-canvas" style="width:100%;height:200px;display:block;"></canvas>
+      </div>
+      <div class="pol-malus glass-card-static">
+        <span class="pol-malus-label">Malus's Law: I = I₀ cos² θ</span>
+        <span class="pol-malus-value" id="pol-malus-value">I = 1.000 × cos²(0°) = 1.000</span>
+      </div>
+      <div class="lab-info glass-card-static">
+        <h3>About Polarization</h3>
+        <p>Polarization describes the orientation of the electric field oscillations in a light wave. A polarizer transmits only the component of light aligned with its transmission axis. When the transmitted light passes through a second polarizer (analyzer), the intensity follows <strong>Malus's law</strong>.</p>
+        <div class="info-formula">I = I₀ cos² θ</div>
+        <p><strong>Key observations:</strong> When the polarizer and analyzer axes are aligned (θ = 0°), maximum light is transmitted. At θ = 90° (crossed polarizers), no light passes through. The intensity varies as cos² of the angle.</p>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('pol-back').addEventListener('click', () => navigate('labs'));
+
+  let angle = 0;
+  let sourceOn = true;
+  let animId = 0;
+  let time = 0;
+
+  const canvas = document.getElementById('pol-canvas');
+  const dialSvg = document.getElementById('pol-dial-svg');
+  const angleDisplay = document.getElementById('pol-angle-display');
+  const luxValue = document.getElementById('pol-lux-value');
+  const meterFill = document.getElementById('pol-meter-fill');
+  const meterPct = document.getElementById('pol-meter-pct');
+  const malusDisplay = document.getElementById('pol-malus-value');
+  const sourceToggle = document.getElementById('pol-source');
+
+  function wavelengthToRGB(wl) {
+    let r = 0, g = 0, b = 0;
+    if (wl >= 380 && wl < 440) { r = -(wl - 440) / 60; g = 0; b = 1; }
+    else if (wl >= 440 && wl < 490) { r = 0; g = (wl - 440) / 50; b = 1; }
+    else if (wl >= 490 && wl < 510) { r = 0; g = 1; b = -(wl - 510) / 20; }
+    else if (wl >= 510 && wl < 580) { r = (wl - 510) / 70; g = 1; b = 0; }
+    else if (wl >= 580 && wl < 645) { r = 1; g = -(wl - 645) / 65; b = 0; }
+    else if (wl >= 645 && wl <= 780) { r = 1; g = 0; b = 0; }
+    let factor = wl >= 380 && wl < 420 ? 0.3 + 0.7 * (wl - 380) / 40 :
+                 wl >= 420 && wl <= 700 ? 1 :
+                 wl > 700 && wl <= 780 ? 0.3 + 0.7 * (780 - wl) / 80 : 0;
+    return { r: Math.round(255 * Math.pow(r * factor, 0.8)), g: Math.round(255 * Math.pow(g * factor, 0.8)), b: Math.round(255 * Math.pow(b * factor, 0.8)) };
+  }
+
+  function updateDial(angleRad) {
+    const deg = ((angleRad * 180 / Math.PI) % 360 + 360) % 360;
+    angleDisplay.textContent = deg.toFixed(0) + '°';
+
+    const cx = 70, cy = 70, R = 60;
+    let svg = `<svg width="140" height="140" viewBox="0 0 140 140">`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#1e2438" stroke-width="2"/>`;
+    // Ticks
+    for (let i = 0; i < 360; i += 15) {
+      const rad = i * Math.PI / 180;
+      const inner = i % 45 === 0 ? R - 14 : R - 6;
+      svg += `<line x1="${cx + inner * Math.cos(rad)}" y1="${cy + inner * Math.sin(rad)}" x2="${cx + R * Math.cos(rad)}" y2="${cy + R * Math.sin(rad)}" stroke="#475569" stroke-width="${i % 45 === 0 ? 2 : 1}"/>`;
+    }
+    // Labels
+    [{d:0,l:'0°'},{d:90,l:'90°'},{d:180,l:'180°'},{d:270,l:'270°'}].forEach(({d,l}) => {
+      const rad = d * Math.PI / 180;
+      svg += `<text x="${cx + (R + 16) * Math.cos(rad)}" y="${cy + (R + 16) * Math.sin(rad)}" text-anchor="middle" dominant-baseline="central" fill="#94a3b8" font-size="10" font-family="monospace">${l}</text>`;
+    });
+    // Needle
+    svg += `<line x1="${cx}" y1="${cy}" x2="${cx + R * 0.75 * Math.cos(angleRad)}" y2="${cy + R * 0.75 * Math.sin(angleRad)}" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>`;
+    svg += `<line x1="${cx}" y1="${cy}" x2="${cx - R * 0.3 * Math.cos(angleRad)}" y2="${cy - R * 0.3 * Math.sin(angleRad)}" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" opacity="0.3"/>`;
+    svg += `<circle cx="${cx}" cy="${cy}" r="5" fill="#f59e0b"/>`;
+    svg += `</svg>`;
+    dialSvg.outerHTML = svg;
+    // Re-bind
+    document.getElementById('pol-dial-svg').addEventListener('pointerdown', handleDialDown);
+  }
+
+  function getAngleFromPoint(mx, my) {
+    const rect = dialSvg.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    let a = Math.atan2(my - cy, mx - cx);
+    if (a < 0) a += 2 * Math.PI;
+    return a;
+  }
+
+  function handleDialDown(e) {
+    const newAngle = getAngleFromPoint(e.clientX, e.clientY);
+    angle = newAngle;
+    updateDial(angle);
+    updateUI();
+
+    const move = (e) => { e.preventDefault(); angle = getAngleFromPoint(e.clientX, e.clientY); updateDial(angle); updateUI(); };
+    const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  }
+
+  // Re-bind after initial render
+  setTimeout(() => {
+    document.getElementById('pol-dial-svg').addEventListener('pointerdown', handleDialDown);
+  }, 0);
+
+  sourceToggle.addEventListener('change', (e) => {
+    sourceOn = e.target.checked;
+    updateUI();
+  });
+
+  function updateUI() {
+    const intensity = sourceOn ? Math.cos(angle) * Math.cos(angle) : 0;
+    const deg = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    const pct = Math.round(intensity * 100);
+    const lux = intensity * 100;
+
+    luxValue.innerHTML = lux.toFixed(1) + '<small>lux</small>';
+    meterFill.style.width = pct + '%';
+    meterFill.style.background = pct > 75 ? 'linear-gradient(90deg, #eab308, #facc15)' : pct > 25 ? 'linear-gradient(90deg, #854d0e, #eab308)' : 'linear-gradient(90deg, #451a03, #854d0e)';
+    meterPct.textContent = pct + '%';
+    malusDisplay.textContent = `I = 1.000 × cos²(${deg.toFixed(0)}°) = ${intensity.toFixed(3)}`;
+  }
+
+  function setupCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = 200;
+  }
+
+  const rgb = wavelengthToRGB(550);
+
+  function draw() {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const W = canvas.width, H = canvas.height;
+    const xPol = Math.round(W / 3);
+    const xAna = Math.round(2 * W / 3);
+    const cy = Math.round(H / 2);
+    const t = time;
+    const amp = sourceOn ? 22 : 0;
+    const { r, g, b } = rgb;
+
+    ctx.fillStyle = '#060b18';
+    ctx.fillRect(0, 0, W, H);
+
+    // Divider lines
+    ctx.strokeStyle = '#1e2438';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath(); ctx.moveTo(xPol, 0); ctx.lineTo(xPol, H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xAna, 0); ctx.lineTo(xAna, H); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Labels
+    ctx.fillStyle = '#64748b';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Unpolarized', Math.round(W / 6), 14);
+    ctx.fillText('Polarizer →', xPol, 14);
+    const deg = ((angle * 180 / Math.PI) % 360 + 360) % 360;
+    ctx.fillText('Analyzer @ ' + deg.toFixed(0) + '°', xAna, 14);
+    ctx.font = '9px Inter, sans-serif';
+    ctx.fillText('Polarizer', xPol, H - 6);
+    ctx.fillText('Analyzer', xAna, H - 6);
+
+    // Unpolarized wave (multi-plane)
+    ctx.strokeStyle = `rgba(${r},${g},${b},0.12)`;
+    ctx.lineWidth = 0.5;
+    for (let w = -4; w <= 4; w++) {
+      const offset = w * 2.5;
+      ctx.beginPath();
+      for (let x = 8; x < xPol - 6; x++) {
+        const y = cy + offset + amp * 0.3 * Math.sin(x * 0.06 + t + w * 0.8);
+        x === 8 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    // Polarized wave
+    ctx.strokeStyle = `rgb(${r},${g},${b})`;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    for (let x = 0; x < xAna - xPol - 10; x++) {
+      const y = cy + amp * Math.sin((xPol + 8 + x) * 0.06 + t);
+      x === 0 ? ctx.moveTo(xPol + 8, y) : ctx.lineTo(xPol + 8 + x, y);
+    }
+    ctx.stroke();
+
+    // Analyzed wave
+    const transAmp = amp * Math.abs(Math.cos(angle));
+    if (transAmp > 0.5) {
+      ctx.strokeStyle = `rgb(${r},${g},${b})`;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let x = 0; x < W - xAna - 10; x++) {
+        const y = cy + transAmp * Math.sin((xAna + 8 + x) * 0.06 + t);
+        x === 0 ? ctx.moveTo(xAna + 8, y) : ctx.lineTo(xAna + 8 + x, y);
+      }
+      ctx.stroke();
+    }
+
+    // Screen
+    ctx.strokeStyle = 'rgba(148,163,184,0.3)';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(W - 2, 0); ctx.lineTo(W - 2, H); ctx.stroke();
+    ctx.fillStyle = '#64748b';
+    ctx.font = '9px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('Screen', W - 2, H - 6);
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  function start() {
+    cancelAnimationFrame(animId);
+    setupCanvas();
+    time = 0;
+    animId = requestAnimationFrame(draw);
+    updateUI();
+  }
+
+  const resizeHandler = () => { setupCanvas(); };
+  window.addEventListener('resize', resizeHandler);
+  start();
+
+  window.__polCleanup = () => {
+    cancelAnimationFrame(animId);
+    window.removeEventListener('resize', resizeHandler);
+  };
+}
 
 // ---------- Initial render ----------
 render();
