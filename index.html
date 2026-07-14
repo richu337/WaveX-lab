@@ -964,6 +964,8 @@ function renderPolarization() {
         <div class="pol-dial">
           <svg width="140" height="140" viewBox="0 0 140 140" id="pol-dial-svg">
             <circle cx="70" cy="70" r="60" fill="none" stroke="#1e2438" stroke-width="2"/>
+            <g id="pol-dial-ticks"></g>
+            <g id="pol-dial-needle"></g>
           </svg>
           <span class="pol-dial-value" id="pol-angle-display">0°</span>
         </div>
@@ -995,10 +997,12 @@ function renderPolarization() {
   let angle = 0;
   let sourceOn = true;
   let animId = 0;
-  let time = 0;
+  let startTime = 0;
 
   const canvas = document.getElementById('pol-canvas');
   const dialSvg = document.getElementById('pol-dial-svg');
+  const ticksGroup = document.getElementById('pol-dial-ticks');
+  const needleGroup = document.getElementById('pol-dial-needle');
   const angleDisplay = document.getElementById('pol-angle-display');
   const luxValue = document.getElementById('pol-lux-value');
   const meterFill = document.getElementById('pol-meter-fill');
@@ -1020,46 +1024,44 @@ function renderPolarization() {
     return { r: Math.round(255 * Math.pow(r * factor, 0.8)), g: Math.round(255 * Math.pow(g * factor, 0.8)), b: Math.round(255 * Math.pow(b * factor, 0.8)) };
   }
 
-  function updateDial(angleRad) {
-    const deg = ((angleRad * 180 / Math.PI) % 360 + 360) % 360;
-    angleDisplay.textContent = deg.toFixed(0) + '°';
-
+  // Build static ticks once
+  function buildTicks() {
     const cx = 70, cy = 70, R = 60;
-    let svg = `<svg width="140" height="140" viewBox="0 0 140 140">`;
-    svg += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="#1e2438" stroke-width="2"/>`;
-    // Ticks
+    let html = '';
     for (let i = 0; i < 360; i += 15) {
       const rad = i * Math.PI / 180;
       const inner = i % 45 === 0 ? R - 14 : R - 6;
-      svg += `<line x1="${cx + inner * Math.cos(rad)}" y1="${cy + inner * Math.sin(rad)}" x2="${cx + R * Math.cos(rad)}" y2="${cy + R * Math.sin(rad)}" stroke="#475569" stroke-width="${i % 45 === 0 ? 2 : 1}"/>`;
+      html += `<line x1="${cx + inner * Math.cos(rad)}" y1="${cy + inner * Math.sin(rad)}" x2="${cx + R * Math.cos(rad)}" y2="${cy + R * Math.sin(rad)}" stroke="#475569" stroke-width="${i % 45 === 0 ? 2 : 1}"/>`;
     }
-    // Labels
     [{d:0,l:'0°'},{d:90,l:'90°'},{d:180,l:'180°'},{d:270,l:'270°'}].forEach(({d,l}) => {
       const rad = d * Math.PI / 180;
-      svg += `<text x="${cx + (R + 16) * Math.cos(rad)}" y="${cy + (R + 16) * Math.sin(rad)}" text-anchor="middle" dominant-baseline="central" fill="#94a3b8" font-size="10" font-family="monospace">${l}</text>`;
+      html += `<text x="${cx + (R + 16) * Math.cos(rad)}" y="${cy + (R + 16) * Math.sin(rad)}" text-anchor="middle" dominant-baseline="central" fill="#94a3b8" font-size="10" font-family="monospace">${l}</text>`;
     });
-    // Needle
-    svg += `<line x1="${cx}" y1="${cy}" x2="${cx + R * 0.75 * Math.cos(angleRad)}" y2="${cy + R * 0.75 * Math.sin(angleRad)}" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>`;
-    svg += `<line x1="${cx}" y1="${cy}" x2="${cx - R * 0.3 * Math.cos(angleRad)}" y2="${cy - R * 0.3 * Math.sin(angleRad)}" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" opacity="0.3"/>`;
-    svg += `<circle cx="${cx}" cy="${cy}" r="5" fill="#f59e0b"/>`;
-    svg += `</svg>`;
-    dialSvg.outerHTML = svg;
-    // Re-bind
-    document.getElementById('pol-dial-svg').addEventListener('pointerdown', handleDialDown);
+    ticksGroup.innerHTML = html;
   }
 
-  function getAngleFromPoint(mx, my) {
+  function updateDial(angleRad) {
+    const deg = ((angleRad * 180 / Math.PI) % 360 + 360) % 360;
+    angleDisplay.textContent = deg.toFixed(0) + '°';
+    const cx = 70, cy = 70, R = 60;
+    needleGroup.innerHTML = `
+      <line x1="${cx}" y1="${cy}" x2="${cx + R * 0.75 * Math.cos(angleRad)}" y2="${cy + R * 0.75 * Math.sin(angleRad)}" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+      <line x1="${cx}" y1="${cy}" x2="${cx - R * 0.3 * Math.cos(angleRad)}" y2="${cy - R * 0.3 * Math.sin(angleRad)}" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+      <circle cx="${cx}" cy="${cy}" r="5" fill="#f59e0b"/>
+    `;
+  }
+
+  function getAngleFromPoint(clientX, clientY) {
     const rect = dialSvg.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
     const cy = rect.top + rect.height / 2;
-    let a = Math.atan2(my - cy, mx - cx);
+    let a = Math.atan2(clientY - cy, clientX - cx);
     if (a < 0) a += 2 * Math.PI;
     return a;
   }
 
   function handleDialDown(e) {
-    const newAngle = getAngleFromPoint(e.clientX, e.clientY);
-    angle = newAngle;
+    angle = getAngleFromPoint(e.clientX, e.clientY);
     updateDial(angle);
     updateUI();
 
@@ -1069,10 +1071,7 @@ function renderPolarization() {
     window.addEventListener('pointerup', up);
   }
 
-  // Re-bind after initial render
-  setTimeout(() => {
-    document.getElementById('pol-dial-svg').addEventListener('pointerdown', handleDialDown);
-  }, 0);
+  dialSvg.addEventListener('pointerdown', handleDialDown);
 
   sourceToggle.addEventListener('change', (e) => {
     sourceOn = e.target.checked;
@@ -1100,21 +1099,21 @@ function renderPolarization() {
 
   const rgb = wavelengthToRGB(550);
 
-  function draw() {
+  function draw(timestamp) {
+    if (!startTime) startTime = timestamp;
+    const elapsed = (timestamp - startTime) / 1000;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const W = canvas.width, H = canvas.height;
     const xPol = Math.round(W / 3);
     const xAna = Math.round(2 * W / 3);
     const cy = Math.round(H / 2);
-    const t = time;
     const amp = sourceOn ? 22 : 0;
     const { r, g, b } = rgb;
 
     ctx.fillStyle = '#060b18';
     ctx.fillRect(0, 0, W, H);
 
-    // Divider lines
     ctx.strokeStyle = '#1e2438';
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
@@ -1122,7 +1121,6 @@ function renderPolarization() {
     ctx.beginPath(); ctx.moveTo(xAna, 0); ctx.lineTo(xAna, H); ctx.stroke();
     ctx.setLineDash([]);
 
-    // Labels
     ctx.fillStyle = '#64748b';
     ctx.font = '10px Inter, sans-serif';
     ctx.textAlign = 'center';
@@ -1134,43 +1132,39 @@ function renderPolarization() {
     ctx.fillText('Polarizer', xPol, H - 6);
     ctx.fillText('Analyzer', xAna, H - 6);
 
-    // Unpolarized wave (multi-plane)
     ctx.strokeStyle = `rgba(${r},${g},${b},0.12)`;
     ctx.lineWidth = 0.5;
     for (let w = -4; w <= 4; w++) {
       const offset = w * 2.5;
       ctx.beginPath();
       for (let x = 8; x < xPol - 6; x++) {
-        const y = cy + offset + amp * 0.3 * Math.sin(x * 0.06 + t + w * 0.8);
+        const y = cy + offset + amp * 0.3 * Math.sin(x * 0.06 + elapsed * 3 + w * 0.8);
         x === 8 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       }
       ctx.stroke();
     }
 
-    // Polarized wave
     ctx.strokeStyle = `rgb(${r},${g},${b})`;
     ctx.lineWidth = 2.5;
     ctx.beginPath();
     for (let x = 0; x < xAna - xPol - 10; x++) {
-      const y = cy + amp * Math.sin((xPol + 8 + x) * 0.06 + t);
+      const y = cy + amp * Math.sin((xPol + 8 + x) * 0.06 + elapsed * 3);
       x === 0 ? ctx.moveTo(xPol + 8, y) : ctx.lineTo(xPol + 8 + x, y);
     }
     ctx.stroke();
 
-    // Analyzed wave
     const transAmp = amp * Math.abs(Math.cos(angle));
     if (transAmp > 0.5) {
       ctx.strokeStyle = `rgb(${r},${g},${b})`;
       ctx.lineWidth = 2.5;
       ctx.beginPath();
       for (let x = 0; x < W - xAna - 10; x++) {
-        const y = cy + transAmp * Math.sin((xAna + 8 + x) * 0.06 + t);
+        const y = cy + transAmp * Math.sin((xAna + 8 + x) * 0.06 + elapsed * 3);
         x === 0 ? ctx.moveTo(xAna + 8, y) : ctx.lineTo(xAna + 8 + x, y);
       }
       ctx.stroke();
     }
 
-    // Screen
     ctx.strokeStyle = 'rgba(148,163,184,0.3)';
     ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(W - 2, 0); ctx.lineTo(W - 2, H); ctx.stroke();
@@ -1179,16 +1173,17 @@ function renderPolarization() {
     ctx.textAlign = 'center';
     ctx.fillText('Screen', W - 2, H - 6);
 
-    time++;
     animId = requestAnimationFrame(draw);
   }
 
   function start() {
     cancelAnimationFrame(animId);
     setupCanvas();
-    time = 0;
-    animId = requestAnimationFrame(draw);
+    startTime = 0;
+    buildTicks();
+    updateDial(angle);
     updateUI();
+    animId = requestAnimationFrame(draw);
   }
 
   const resizeHandler = () => { setupCanvas(); };
