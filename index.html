@@ -3,207 +3,242 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WaveX - Cyber Optics Sandbox</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>WaveX 2.0 — Optics Simulation Suite</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg-primary: #060b18;
-  --bg-secondary: #0a0e1a;
-  --bg-tertiary: #0f1525;
-  --bg-card: #111827;
-  --bg-card-hover: #1a1f35;
-  --bg-elevated: #1e2438;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent-blue: #3b82f6;
-  --accent-cyan: #06b6d4;
-  --accent-electric: #00d4ff;
-  --accent-purple: #8b5cf6;
-  --accent-green: #10b981;
-  --accent-red: #ef4444;
-  --accent-yellow: #f59e0b;
-  --border-color: rgba(59, 130, 246, 0.15);
-  --border-active: rgba(59, 130, 246, 0.4);
-  --gradient-primary: linear-gradient(135deg, #3b82f6, #06b6d4);
-  --gradient-accent: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  --gradient-card: linear-gradient(145deg, rgba(17, 24, 39, 0.8), rgba(15, 21, 37, 0.9));
-  --glow-blue: 0 0 20px rgba(59, 130, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.05);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
 body {
-  font-family: var(--font-sans);
-  background: var(--bg-primary);
-  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  background: #0a0b10;
+  color: #e4e7f0;
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
 }
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-blue); }
-::selection { background: rgba(59, 130, 246, 0.3); color: var(--text-primary); }
-h1, h2, h3, h4 { font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; }
-button { font-family: var(--font-sans); cursor: pointer; border: none; outline: none; transition: var(--transition); }
-input { font-family: var(--font-sans); outline: none; transition: var(--transition); }
-
-.glass-card {
-  background: var(--gradient-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: var(--transition);
-}
-.glass-card:hover {
-  border-color: var(--border-active);
-  box-shadow: var(--glow-blue);
-  transform: translateY(-1px);
-}
-.glass-card-static {
-  background: var(--gradient-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-input[type="range"] {
-  -webkit-appearance: none; appearance: none;
-  width: 100%; height: 4px;
-  background: var(--bg-elevated);
-  border-radius: 2px; outline: none;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; appearance: none;
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--gradient-primary);
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
-  transition: var(--transition);
-}
-input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-input[type="range"]::-moz-range-thumb {
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--gradient-primary);
-  cursor: pointer; border: none;
-}
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.animate-fade-in { animation: fadeIn 0.4s ease forwards; }
-.animate-fade-in-up { animation: fadeInUp 0.5s ease forwards; }
-
-.app {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 24px;
-}
-
-/* Labs page */
+::selection { background: rgba(168, 85, 247, 0.3); }
+::-webkit-scrollbar { width: 4px; }
+@keyframes sweepText { 0% { clip-path: polygon(0 0, 12% 0, 6% 100%, 0 100%); } 100% { clip-path: polygon(88% 0, 100% 0, 100% 100%, 82% 100%); } }
+.sweep-glow { position: relative; display: inline-block; }
+.sweep-glow::before { content: 'WaveX 2.0'; position: absolute; top: 0; left: 0; color: #fff; text-shadow: 0 0 20px rgba(168,85,247,0.8), 0 0 40px rgba(168,85,247,0.4); -webkit-text-fill-color: #fff; background: none; animation: none; pointer-events: none; }
+::-webkit-scrollbar-track { background: #0a0b10; }
+::-webkit-scrollbar-thumb { background: #1a1d2e; border-radius: 2px; }
+#bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+h1, h2, h3, h4 { font-weight: 600; line-height: 1.3; letter-spacing: -0.02em; }
+button { font-family: inherit; cursor: pointer; border: none; outline: none; }
+input { font-family: inherit; outline: none; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.anim-in { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.anim-d1 { animation-delay: 0.05s; opacity: 0; }
+.anim-d2 { animation-delay: 0.1s; opacity: 0; }
+.anim-d3 { animation-delay: 0.15s; opacity: 0; }
+.card { background: linear-gradient(145deg, rgba(14, 16, 28, 0.9), rgba(10, 11, 20, 0.95)); border: 1px solid rgba(168, 85, 247, 0.06); border-radius: 14px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.card:hover { border-color: rgba(168, 85, 247, 0.2); box-shadow: 0 8px 32px rgba(168, 85, 247, 0.08); }
+.card-static { background: linear-gradient(145deg, rgba(14, 16, 28, 0.9), rgba(10, 11, 20, 0.95)); border: 1px solid rgba(168, 85, 247, 0.06); border-radius: 14px; }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 3px; background: #1a1d2e; border-radius: 2px; outline: none; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #9333ea); cursor: pointer; box-shadow: 0 0 10px rgba(168,85,247,0.3); transition: transform 0.15s; }
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.25); }
+input[type="range"]::-moz-range-thumb { width: 15px; height: 15px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #9333ea); cursor: pointer; border: none; }
+.app { max-width: 1000px; margin: 0 auto; padding: 24px; }
 .labs-page { max-width: 1000px; margin: 0 auto; }
-.page-header { text-align: center; margin-bottom: 32px; }
-.page-title {
-  font-size: 32px; margin-bottom: 8px;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.page-desc { color: var(--text-secondary); font-size: 15px; }
-.labs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-.lab-card { padding: 32px; text-align: left; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; }
-.lab-card-icon { font-size: 42px; margin-bottom: 16px; }
-.lab-card-title { font-size: 19px; margin-bottom: 8px; }
-.lab-card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; }
-.lab-card-action {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 14px; font-weight: 600; color: var(--accent-cyan);
-  margin-top: auto; transition: var(--transition);
-}
-.lab-card-action .arrow { transition: var(--transition); }
-.lab-card:hover .arrow { transform: translateX(6px); }
-
-/* Lab detail */
+.page-header { text-align: center; padding: 64px 0 44px; }
+.page-title { font-size: 44px; font-weight: 700; background: linear-gradient(135deg, #a855f7 0%, #7c3aed 50%, #6d28d9 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.04em; margin-bottom: 10px; }
+.page-sub { display: inline-flex; align-items: center; gap: 8px; color: #5a6a8a; font-size: 12px; font-weight: 500; background: rgba(168,85,247,0.05); padding: 5px 14px; border-radius: 20px; border: 1px solid rgba(168,85,247,0.08); text-transform: uppercase; letter-spacing: 0.06em; }
+.page-desc { color: #5a6a8a; font-size: 14px; margin-top: 16px; max-width: 460px; margin: 16px auto 0; }
+.labs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; margin-top: 8px; }
+.lab-card { padding: 30px; text-align: left; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; position: relative; overflow: hidden; }
+.lab-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #a855f7, transparent); opacity: 0; transition: opacity 0.3s; }
+.lab-card:hover::after { opacity: 1; }
+.lab-card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #a855f7; margin-bottom: 16px; background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.12); }
+.lab-card-title { font-size: 17px; margin-bottom: 8px; color: #e4e7f0; }
+.lab-card-desc { font-size: 13px; color: #5a6a8a; line-height: 1.6; margin-bottom: 20px; }
+.lab-card-action { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #a855f7; margin-top: auto; text-transform: uppercase; letter-spacing: 0.04em; transition: gap 0.3s; }
+.lab-card:hover .lab-card-action { gap: 12px; }
+.lab-card-action i { font-size: 11px; transition: transform 0.3s; }
+.lab-card:hover .lab-card-action i { transform: translateX(4px); }
 .lab-detail { max-width: 900px; margin: 0 auto; }
-.back-btn { background: transparent; color: var(--accent-cyan); font-size: 14px; font-weight: 500; padding: 8px 0; margin-bottom: 16px; display: inline-block; }
-.back-btn:hover { color: var(--accent-electric); }
-.lab-detail-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
-.lab-detail-icon { font-size: 40px; }
-.lab-detail-header h1 { font-size: 24px; }
-.lab-detail-desc { color: var(--text-secondary); font-size: 14px; margin-top: 4px; }
-.lab-canvas-wrapper { padding: 0; overflow: hidden; margin-bottom: 16px; }
+.back-btn { background: transparent; color: #5a6a8a; font-size: 12px; font-weight: 500; padding: 8px 0; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s; text-transform: uppercase; letter-spacing: 0.04em; }
+.back-btn:hover { color: #a855f7; }
+.lab-detail-header { display: flex; align-items: center; gap: 16px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid rgba(168,85,247,0.05); }
+.lab-detail-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #a855f7; background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.12); flex-shrink: 0; }
+.lab-detail-header h1 { font-size: 22px; color: #e4e7f0; }
+.lab-detail-desc { color: #5a6a8a; font-size: 13px; margin-top: 3px; }
+.lab-canvas-wrapper { padding: 0; overflow: hidden; border-radius: 14px; margin-bottom: 14px; }
 .canvas-container { width: 100%; }
 .lab-canvas { width: 100%; height: 320px; display: block; }
-.intensity-container { width: 100%; border-top: 1px solid var(--border-color); }
+.intensity-container { width: 100%; border-top: 1px solid rgba(168,85,247,0.05); }
 .intensity-canvas { width: 100%; height: 160px; display: block; }
-.lab-controls { padding: 20px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 12px; }
-
-/* Polarization lab */
-.pol-layout { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: start; margin-bottom: 16px; }
-.pol-controls { padding: 20px; }
-.pol-dial { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.pol-dial svg { cursor: pointer; touch-action: none; }
-.pol-dial-value { font-size: 13px; font-family: var(--font-mono); color: var(--accent-yellow); }
-.pol-meter { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; min-width: 180px; }
-.pol-meter-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-.pol-meter-header span { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
-.pol-meter-value { font-size: 28px; font-weight: 700; font-family: var(--font-mono); color: var(--text-primary); margin-bottom: 10px; }
-.pol-meter-value small { font-size: 12px; color: var(--text-muted); margin-left: 4px; }
-.pol-meter-bar { width: 100%; height: 8px; background: var(--bg-elevated); border-radius: 4px; overflow: hidden; }
-.pol-meter-fill { height: 100%; border-radius: 4px; transition: width 0.15s; }
-.pol-meter-pct { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 4px; font-family: var(--font-mono); }
-.pol-canvas-wrapper { padding: 0; overflow: hidden; margin-bottom: 16px; }
-.pol-malus { display: flex; align-items: center; justify-content: center; gap: 16px; font-size: 14px; font-family: var(--font-mono); padding: 16px; }
-.pol-malus-label { color: var(--text-muted); }
-.pol-malus-value { color: var(--accent-yellow); font-weight: 700; }
-@media (max-width: 768px) {
-  .pol-layout { grid-template-columns: 1fr; }
-}
+.lab-controls { padding: 20px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 12px; }
 .controls-row { display: flex; gap: 20px; }
 .control-group { flex: 1; }
-.control-group label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
-.control-val { color: var(--accent-cyan); font-weight: 600; font-family: var(--font-mono); }
+.control-group label { display: flex; justify-content: space-between; align-items: center; font-size: 10px; font-weight: 600; color: #5a6a8a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.control-val { color: #a855f7; font-weight: 600; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: none; letter-spacing: 0; }
 .controls-toggle { padding-top: 4px; }
-.toggle-label { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-secondary); cursor: pointer; }
+.toggle-label { display: flex; align-items: center; gap: 10px; font-size: 12px; color: #5a6a8a; cursor: pointer; }
 .toggle-label input { display: none; }
-.toggle-track { width: 36px; height: 20px; background: var(--bg-elevated); border-radius: 10px; position: relative; transition: var(--transition); }
-.toggle-label input:checked + .toggle-track { background: var(--accent-blue); }
-.toggle-thumb { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: white; transition: var(--transition); }
-.toggle-label input:checked + .toggle-track .toggle-thumb { left: 18px; }
+.toggle-track { width: 34px; height: 18px; background: #1a1d2e; border-radius: 9px; position: relative; transition: background 0.25s; }
+.toggle-label input:checked + .toggle-track { background: #a855f7; }
+.toggle-thumb { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #e4e7f0; transition: transform 0.25s; }
+.toggle-label input:checked + .toggle-track .toggle-thumb { transform: translateX(16px); }
 .lab-info { padding: 20px; margin-bottom: 24px; }
-.lab-info h3 { font-size: 16px; margin-bottom: 8px; }
-.lab-info p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; margin: 8px 0; }
-.info-formula { text-align: center; padding: 12px; margin: 12px 0; background: rgba(59, 130, 246, 0.05); border-radius: var(--radius-sm); font-family: var(--font-mono); color: var(--accent-electric); font-size: 18px; border: 1px solid rgba(59, 130, 246, 0.1); }
-
-@media (max-width: 768px) {
-  .controls-row { flex-direction: column; gap: 12px; }
-  .lab-canvas { height: 240px; }
-  .intensity-canvas { height: 130px; }
-  .labs-grid { grid-template-columns: 1fr; }
-  .app { padding: 16px; }
-}
+.lab-info h3 { font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: #c8cde0; }
+.lab-info h3 i { color: #a855f7; font-size: 13px; }
+.lab-info p { color: #5a6a8a; font-size: 13px; line-height: 1.7; margin: 8px 0; }
+.info-formula { text-align: center; padding: 12px; margin: 14px 0; background: rgba(168,85,247,0.03); border-radius: 8px; font-family: 'JetBrains Mono', monospace; color: #a855f7; font-size: 16px; border: 1px solid rgba(168,85,247,0.08); }
+.pol-layout { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: start; margin-bottom: 14px; }
+.pol-controls { padding: 20px; }
+.pol-dial { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 16px 0; }
+.pol-dial svg { cursor: pointer; touch-action: none; }
+.pol-dial-value { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: #a855f7; }
+.pol-meter { background: rgba(14,16,28,0.9); border: 1px solid rgba(168,85,247,0.06); border-radius: 14px; padding: 20px; min-width: 170px; }
+.pol-meter-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.pol-meter-header i { color: #a855f7; font-size: 13px; }
+.pol-meter-header span { font-size: 10px; color: #5a6a8a; text-transform: uppercase; letter-spacing: 0.05em; }
+.pol-meter-value { font-size: 26px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: #e4e7f0; margin-bottom: 10px; }
+.pol-meter-value small { font-size: 11px; color: #5a6a8a; margin-left: 4px; font-weight: 400; }
+.pol-meter-bar { width: 100%; height: 7px; background: #1a1d2e; border-radius: 4px; overflow: hidden; }
+.pol-meter-fill { height: 100%; border-radius: 4px; transition: width 0.15s; }
+.pol-meter-pct { font-size: 10px; color: #5a6a8a; text-align: center; margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+.pol-canvas-wrapper { padding: 0; overflow: hidden; border-radius: 14px; margin-bottom: 14px; }
+.pol-malus { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: 13px; font-family: 'JetBrains Mono', monospace; padding: 14px; margin-bottom: 14px; }
+.pol-malus-label { color: #5a6a8a; }
+.pol-malus-value { color: #a855f7; font-weight: 700; }
+@media (max-width: 768px) { .pol-layout { grid-template-columns: 1fr; } .controls-row { flex-direction: column; gap: 12px; } .lab-canvas { height: 240px; } .intensity-canvas { height: 130px; } .labs-grid { grid-template-columns: 1fr; } .app { padding: 16px; } }
 </style>
 </head>
 <body>
 <div id="root" class="app"></div>
-
+<canvas id="bg-canvas"></canvas>
 <script>
 (function () {
 'use strict';
 
+// === Background physics doodle canvas ===
+const bgCanvas = document.getElementById('bg-canvas');
+function resizeBgCanvas() { bgCanvas.width = window.innerWidth; bgCanvas.height = window.innerHeight; }
+resizeBgCanvas(); window.addEventListener('resize', resizeBgCanvas);
+const bgCtx = bgCanvas.getContext('2d');
+
+function drawLightBulb(ctx, x, y, s, phase) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.strokeStyle = 'rgba(168,85,247,0.12)'; ctx.lineWidth = 1.5;
+  // bulb glass
+  ctx.beginPath(); ctx.arc(0, 0, 22, 0, Math.PI, false); ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, -2, 22, Math.PI, 0, false); ctx.stroke();
+  // filament
+  ctx.beginPath(); ctx.moveTo(-8, 6); ctx.lineTo(-5, -2); ctx.lineTo(0, 4); ctx.lineTo(5, -2); ctx.lineTo(8, 6); ctx.stroke();
+  // base
+  ctx.beginPath(); ctx.moveTo(-10, 22); ctx.lineTo(-10, 30); ctx.lineTo(10, 30); ctx.lineTo(10, 22); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-10, 30); ctx.lineTo(-12, 38); ctx.moveTo(10, 30); ctx.lineTo(12, 38); ctx.stroke();
+  // glow
+  const glow = 0.3 + 0.2 * Math.sin(phase);
+  ctx.beginPath(); ctx.arc(0, 0, 22 * glow, 0, Math.PI * 2);
+  ctx.fillStyle = `rgba(168,85,247,${0.02 + 0.03 * glow})`; ctx.fill();
+  ctx.restore();
+}
+function drawConvexLens(ctx, x, y, s, phase) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.strokeStyle = 'rgba(168,85,247,0.1)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(-4, -24); ctx.quadraticCurveTo(18, 0, -4, 24); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(4, -24); ctx.quadraticCurveTo(-18, 0, 4, 24); ctx.stroke();
+  // rays through lens
+  ctx.strokeStyle = 'rgba(168,85,247,0.04)'; ctx.lineWidth = 0.5;
+  for (let i = -2; i <= 2; i++) {
+    ctx.beginPath(); ctx.moveTo(-30, i * 8 - 2); ctx.lineTo(30, i * 8 - 2); ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawPrism(ctx, x, y, s, phase) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.strokeStyle = 'rgba(168,85,247,0.1)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(0, -20); ctx.lineTo(20, 20); ctx.lineTo(-20, 20); ctx.closePath(); ctx.stroke();
+  // light entering + splitting
+  ctx.strokeStyle = 'rgba(168,85,247,0.05)'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(-24, -12); ctx.lineTo(0, -20); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, -20); ctx.lineTo(22, 4); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, -20); ctx.lineTo(12, 22); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, -20); ctx.lineTo(-4, 24); ctx.stroke();
+  ctx.restore();
+}
+function drawWave(ctx, x, y, s, phase) {
+  ctx.save(); ctx.translate(x, y); ctx.strokeStyle = 'rgba(168,85,247,0.06)'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let i = 0; i < 60; i++) {
+    const px = i - 30, py = 8 * Math.sin((i * 0.3) + phase);
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.beginPath();
+  for (let i = 0; i < 60; i++) {
+    const px = i - 30, py = 8 * Math.cos((i * 0.3) + phase);
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+function drawOscilloscope(ctx, x, y, s, phase) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.strokeStyle = 'rgba(168,85,247,0.1)'; ctx.lineWidth = 1.2;
+  ctx.strokeRect(-24, -18, 48, 36);
+  // screen
+  ctx.fillStyle = 'rgba(168,85,247,0.02)'; ctx.fillRect(-20, -14, 40, 28);
+  // trace
+  ctx.strokeStyle = 'rgba(168,85,247,0.08)'; ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  for (let i = 0; i < 40; i++) {
+    const px = -20 + i, py = 8 * Math.sin((i * 0.4) + phase * 2);
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  // knobs
+  ctx.beginPath(); ctx.arc(-16, 16, 3, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.arc(16, 16, 3, 0, Math.PI * 2); ctx.stroke();
+  ctx.restore();
+}
+function drawBeaker(ctx, x, y, s, phase) {
+  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+  ctx.strokeStyle = 'rgba(168,85,247,0.1)'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(-16, -16); ctx.lineTo(-16, 20); ctx.lineTo(16, 20); ctx.lineTo(16, -16); ctx.closePath(); ctx.stroke();
+  ctx.fillStyle = 'rgba(168,85,247,0.015)'; ctx.fillRect(-14, -2, 28, 22);
+  var liqY = 14 + 2 * Math.sin(phase * 0.5); ctx.strokeStyle = 'rgba(168,85,247,0.06)'; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(-14, liqY); for (var i = -14; i <= 14; i++) ctx.lineTo(i, liqY + 1.5 * Math.sin(i * 0.4 + phase)); ctx.stroke();
+  for (var b = 0; b < 3; b++) { var by = 16 + b * 4 + 2 * Math.sin(phase + b); ctx.beginPath(); ctx.arc(-8 + b * 6, by, 1.2, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(168,85,247,0.04)'; ctx.stroke(); }
+  ctx.restore(); }
+function drawTelescope(ctx, x, y, s, phase) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(-0.5); ctx.strokeStyle = 'rgba(168,85,247,0.1)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-24, -5); ctx.lineTo(24, -5); ctx.lineTo(24, 5); ctx.lineTo(-24, 5); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-28, -8); ctx.lineTo(-24, -5); ctx.lineTo(-24, 5); ctx.lineTo(-28, 8); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.arc(24, 0, 8, -0.6, 0.6); ctx.strokeStyle = 'rgba(168,85,247,0.06)'; ctx.stroke(); ctx.beginPath(); ctx.arc(-28, 0, 10, -0.6, 0.6); ctx.stroke(); ctx.strokeStyle = 'rgba(168,85,247,0.03)'; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(-38, 0); ctx.lineTo(32, 0); ctx.stroke(); ctx.setLineDash([]); ctx.restore(); }
+function drawAtom(ctx, x, y, s, phase) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.strokeStyle = 'rgba(168,85,247,0.08)'; ctx.lineWidth = 0.8; ctx.beginPath(); ctx.ellipse(0, 0, 20, 8, 0.3, 0, Math.PI * 2); ctx.stroke(); ctx.beginPath(); ctx.ellipse(0, 0, 20, 8, -0.4, 0, Math.PI * 2); ctx.stroke(); for (var e = 0; e < 2; e++) { var ang = phase * 0.06 + e * Math.PI; ctx.beginPath(); ctx.arc(20 * Math.cos(ang), 8 * Math.sin(ang + (e === 0 ? 0.3 : -0.4)), 2.5, 0, Math.PI * 2); ctx.fillStyle = 'rgba(168,85,247,0.08)'; ctx.fill(); } ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI * 2); ctx.fillStyle = 'rgba(168,85,247,0.05)'; ctx.fill(); ctx.beginPath(); ctx.arc(-1.5, -1, 1.2, 0, Math.PI * 2); ctx.fillStyle = 'rgba(168,85,247,0.1)'; ctx.fill(); ctx.beginPath(); ctx.arc(1.5, 1, 1.2, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+function drawMicroscope(ctx, x, y, s, phase) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.strokeStyle = 'rgba(168,85,247,0.1)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-4, -22); ctx.lineTo(4, -22); ctx.lineTo(4, 22); ctx.lineTo(-4, 22); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-8, -22); ctx.lineTo(8, -22); ctx.lineTo(8, -26); ctx.lineTo(-8, -26); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-6, 22); ctx.lineTo(-6, 28); ctx.lineTo(6, 28); ctx.lineTo(6, 22); ctx.stroke(); ctx.beginPath(); ctx.arc(0, -26, 10, 0, Math.PI, false); ctx.strokeStyle = 'rgba(168,85,247,0.06)'; ctx.stroke(); ctx.strokeStyle = 'rgba(168,85,247,0.03)'; ctx.setLineDash([1, 3]); ctx.beginPath(); ctx.moveTo(0, -26); ctx.lineTo(0, -36); ctx.stroke(); ctx.setLineDash([]); ctx.restore(); }
+function drawMagnet(ctx, x, y, s, phase) { ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(phase * 0.02); ctx.strokeStyle = 'rgba(168,85,247,0.1)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(-10, -16); ctx.lineTo(-10, 16); ctx.lineTo(-6, 16); ctx.lineTo(-6, -16); ctx.closePath(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(6, -16); ctx.lineTo(6, 16); ctx.lineTo(10, 16); ctx.lineTo(10, -16); ctx.closePath(); ctx.stroke(); ctx.fillStyle = 'rgba(168,85,247,0.03)'; ctx.fillRect(-7, -8, 14, 16); ctx.strokeStyle = 'rgba(168,85,247,0.04)'; ctx.setLineDash([1, 4]); ctx.beginPath(); ctx.arc(0, 0, 18, -0.8, 0.8); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 0, 22, -0.6, 0.6); ctx.stroke(); ctx.setLineDash([]); ctx.restore(); }
+const instruments = [
+  { draw: drawLightBulb, x: 0.08, y: 0.15, s: 1.0, vx: 0.0003, vy: 0.0002 },
+  { draw: drawPrism, x: 0.9, y: 0.75, s: 0.9, vx: -0.0002, vy: -0.0003 },
+  { draw: drawConvexLens, x: 0.05, y: 0.85, s: 0.8, vx: 0.0004, vy: -0.0001 },
+  { draw: drawOscilloscope, x: 0.85, y: 0.12, s: 0.85, vx: -0.0003, vy: 0.0004 },
+  { draw: drawWave, x: 0.5, y: 0.08, s: 1.2, vx: 0, vy: 0.0005 },
+  { draw: drawLightBulb, x: 0.75, y: 0.4, s: 0.6, vx: 0.0002, vy: -0.0002 },
+  { draw: drawWave, x: 0.2, y: 0.7, s: 0.9, vx: 0.0003, vy: 0 },
+  { draw: drawTelescope, x: 0.6, y: 0.5, s: 0.7, vx: -0.00025, vy: -0.00015 },
+  { draw: drawAtom, x: 0.4, y: 0.85, s: 0.8, vx: 0.0003, vy: -0.0002 },
+  { draw: drawBeaker, x: 0.7, y: 0.65, s: 0.65, vx: -0.00015, vy: -0.00025 },
+  { draw: drawMicroscope, x: 0.15, y: 0.7, s: 0.7, vx: 0.00025, vy: -0.0003 },
+  { draw: drawMagnet, x: 0.55, y: 0.2, s: 0.65, vx: -0.0002, vy: 0.00035 },
+];
+
+function drawBg(ts) {
+  const W = bgCanvas.width, H = bgCanvas.height, t = ts / 1000;
+  bgCtx.clearRect(0, 0, W, H);
+  for (let i = 0; i < instruments.length; i++) {
+    const ins = instruments[i];
+    ins.x += ins.vx; ins.y += ins.vy;
+    if (ins.x < 0 || ins.x > 1) ins.vx *= -1;
+    if (ins.y < 0 || ins.y > 1) ins.vy *= -1;
+    ins.draw(bgCtx, ins.x * W, ins.y * H, ins.s, t);
+  }
+  requestAnimationFrame(drawBg);
+}
+requestAnimationFrame(drawBg);
+
 const ROOT = document.getElementById('root');
 
-// ---------- state ----------
 let activeView = 'labs';
 
 function navigate(view) {
@@ -213,8 +248,6 @@ function navigate(view) {
   if (typeof window.__polCleanup === 'function') { window.__polCleanup(); window.__polCleanup = null; }
   render();
 }
-
-// ---------- render ----------
 function render() {
   if (activeView === 'labs') renderLabs();
   else if (activeView === 'doubleslit') renderDoubleSlit();
@@ -222,32 +255,32 @@ function render() {
   else if (activeView === 'polarization') renderPolarization();
 }
 
-// ---------- Labs page ----------
 function renderLabs() {
   ROOT.innerHTML = `
-    <div class="labs-page animate-fade-in">
-      <div class="page-header">
-        <h1 class="page-title">WaveX Cyber Optics Sandbox</h1>
-        <p class="page-desc">Explore optics through hands-on simulations</p>
+    <div class="labs-page">
+      <div class="page-header anim-in">
+        <h1 class="page-title" id="brand-title"><span class="sweep-glow" id="brand-glow">WaveX 2.0</span></h1>
+        <div class="page-sub"><i class="fas fa-wave-square"></i> Optics Simulation Suite</div>
+        <p class="page-desc">Interactive wave optics experiments</p>
       </div>
       <div class="labs-grid">
-        <button class="lab-card glass-card" data-lab="doubleslit">
-          <div class="lab-card-icon">🌈</div>
+        <button class="lab-card card anim-in anim-d1" data-lab="doubleslit">
+          <div class="lab-card-icon"><i class="fas fa-sliders-h"></i></div>
           <h3 class="lab-card-title">Young's Double Slit</h3>
-          <p class="lab-card-desc">Interference pattern from two coherent sources — observe how light waves combine to create bright and dark fringes.</p>
-          <div class="lab-card-action"><span>Launch Lab</span><span class="arrow">→</span></div>
+          <p class="lab-card-desc">Two coherent sources produce interference fringes. y = m&lambda;L / d</p>
+          <div class="lab-card-action"><span>Launch</span> <i class="fas fa-arrow-right"></i></div>
         </button>
-        <button class="lab-card glass-card" data-lab="singleslit">
-          <div class="lab-card-icon">🔆</div>
+        <button class="lab-card card anim-in anim-d2" data-lab="singleslit">
+          <div class="lab-card-icon"><i class="fas fa-expand-alt"></i></div>
           <h3 class="lab-card-title">Single Slit Diffraction</h3>
-          <p class="lab-card-desc">Diffraction pattern from a single aperture — see how light spreads and creates a central maximum with secondary peaks.</p>
-          <div class="lab-card-action"><span>Launch Lab</span><span class="arrow">→</span></div>
+          <p class="lab-card-desc">Light spreads through a narrow aperture. Central maximum + secondary peaks.</p>
+          <div class="lab-card-action"><span>Launch</span> <i class="fas fa-arrow-right"></i></div>
         </button>
-        <button class="lab-card glass-card" data-lab="polarization">
-          <div class="lab-card-icon">🔬</div>
+        <button class="lab-card card anim-in anim-d3" data-lab="polarization">
+          <div class="lab-card-icon"><i class="fas fa-wave-square"></i></div>
           <h3 class="lab-card-title">Polarization</h3>
-          <p class="lab-card-desc">Explore Malus's law with polarizers — see how light intensity changes as you rotate the analyzer relative to the polarizer.</p>
-          <div class="lab-card-action"><span>Launch Lab</span><span class="arrow">→</span></div>
+          <p class="lab-card-desc">Malus's law: rotate the analyzer to see intensity vary as cos&sup2;&theta;.</p>
+          <div class="lab-card-action"><span>Launch</span> <i class="fas fa-arrow-right"></i></div>
         </button>
       </div>
     </div>
@@ -258,29 +291,29 @@ function renderLabs() {
 }
 
 // ========================================================================
-// YOUNG'S DOUBLE SLIT EXPERIMENT
+// YOUNG'S DOUBLE SLIT
 // ========================================================================
 function renderDoubleSlit() {
   ROOT.innerHTML = `
-    <div class="lab-detail animate-fade-in">
-      <button class="back-btn" id="ds-back">← Back to Labs</button>
+    <div class="lab-detail anim-in">
+      <button class="back-btn" id="ds-back"><i class="fas fa-chevron-left"></i> Back</button>
       <div class="lab-detail-header">
-        <span class="lab-detail-icon">🌈</span>
+        <div class="lab-detail-icon"><i class="fas fa-sliders-h"></i></div>
         <div>
           <h1>Young's Double Slit Experiment</h1>
-          <p class="lab-detail-desc">Observe the interference pattern from two coherent light sources. Adjust parameters to see how they affect the fringe pattern.</p>
+          <p class="lab-detail-desc">y = m&lambda;L / d — Light rays converge to form interference fringes</p>
         </div>
       </div>
-      <div class="lab-canvas-wrapper glass-card-static">
+      <div class="lab-canvas-wrapper card-static">
         <div class="canvas-container"><canvas id="ds-canvas" class="lab-canvas"></canvas></div>
         <div class="intensity-container"><canvas id="ds-intensity" class="intensity-canvas"></canvas></div>
       </div>
-      <div class="lab-controls glass-card-static" id="ds-controls"></div>
-      <div class="lab-info glass-card-static">
-        <h3>About this experiment</h3>
-        <p>In Young's double-slit experiment, light from a single source is split into two coherent beams that interfere, producing alternating bright and dark fringes. In the ideal case, all bright fringes have equal intensity.</p>
-        <div class="info-formula">β = λL / d</div>
-        <p><strong>Key observations:</strong> All bright fringes have equal intensity (ideal case). Fringes are equally spaced. Increasing d (slit separation) decreases fringe width. Increasing λ (wavelength) increases fringe width.</p>
+      <div class="lab-controls card-static" id="ds-controls"></div>
+      <div class="lab-info card-static">
+        <h3><i class="fas fa-flask"></i> About this experiment</h3>
+        <p>In Young's experiment, light passes through two slits and the waves interfere. Bright fringes occur where path difference = m&lambda;. The full pattern combines interference with the single-slit diffraction envelope from each slit of width <em>a</em>.</p>
+        <div class="info-formula">y<sub>m</sub> = m&lambda;L / d &nbsp;&nbsp; &beta; = &lambda;L / d &nbsp;&nbsp; I(&theta;) = I&#x2080; cos&sup2;(&alpha;) &middot; [sin(&beta;)/&beta;]&sup2;</div>
+        <p>Increasing <em>d</em> reduces fringe spacing. Increasing <em>L</em>, <em>&lambda;</em>, or decreasing <em>a</em> increases it.</p>
       </div>
     </div>
   `;
@@ -289,7 +322,6 @@ function renderDoubleSlit() {
 
   const params = { wavelength: 550, slitSeparation: 0.3, slitWidth: 0.08, screenDistance: 1.0 };
   let showWave = true;
-
   const canvas = document.getElementById('ds-canvas');
   const iCanvas = document.getElementById('ds-intensity');
   const controlsEl = document.getElementById('ds-controls');
@@ -298,21 +330,21 @@ function renderDoubleSlit() {
     controlsEl.innerHTML = `
       <div class="controls-row">
         <div class="control-group">
-          <label>Wavelength (λ) <span class="control-val" id="ds-val-wl">${params.wavelength} nm</span></label>
+          <label><span><i class="fas fa-palette" style="margin-right:4px;"></i> Wavelength (&lambda;)</span> <span class="control-val" id="ds-val-wl">${params.wavelength} nm</span></label>
           <input type="range" min="380" max="780" value="${params.wavelength}" id="ds-wl">
         </div>
         <div class="control-group">
-          <label>Slit Separation (d) <span class="control-val" id="ds-val-d">${params.slitSeparation.toFixed(2)} mm</span></label>
+          <label><span><i class="fas fa-arrows-alt-h" style="margin-right:4px;"></i> Slit Separation (d)</span> <span class="control-val" id="ds-val-d">${params.slitSeparation.toFixed(2)} mm</span></label>
           <input type="range" min="0.05" max="2.0" step="0.01" value="${params.slitSeparation}" id="ds-d">
         </div>
       </div>
       <div class="controls-row">
         <div class="control-group">
-          <label>Slit Width (a) <span class="control-val" id="ds-val-a">${params.slitWidth.toFixed(2)} mm</span></label>
+          <label><span><i class="fas fa-arrows-alt-v" style="margin-right:4px;"></i> Slit Width (a)</span> <span class="control-val" id="ds-val-a">${params.slitWidth.toFixed(2)} mm</span></label>
           <input type="range" min="0.02" max="0.5" step="0.01" value="${params.slitWidth}" id="ds-a">
         </div>
         <div class="control-group">
-          <label>Screen Distance (L) <span class="control-val" id="ds-val-l">${params.screenDistance.toFixed(1)} m</span></label>
+          <label><span><i class="fas fa-ruler" style="margin-right:4px;"></i> Screen Distance (L)</span> <span class="control-val" id="ds-val-l">${params.screenDistance.toFixed(1)} m</span></label>
           <input type="range" min="0.2" max="3.0" step="0.1" value="${params.screenDistance}" id="ds-l">
         </div>
       </div>
@@ -320,331 +352,265 @@ function renderDoubleSlit() {
         <label class="toggle-label">
           <input type="checkbox" ${showWave ? 'checked' : ''} id="ds-wave">
           <span class="toggle-track"><span class="toggle-thumb"></span></span>
-          Show Wavefronts
+          <span><i class="far fa-circle" style="margin-right:4px;"></i> Wavefronts</span>
         </label>
       </div>
     `;
-
-    document.getElementById('ds-wl').addEventListener('input', e => {
-      params.wavelength = Number(e.target.value);
-      document.getElementById('ds-val-wl').textContent = params.wavelength + ' nm';
-    });
-    document.getElementById('ds-d').addEventListener('input', e => {
-      params.slitSeparation = Number(e.target.value);
-      document.getElementById('ds-val-d').textContent = params.slitSeparation.toFixed(2) + ' mm';
-    });
-    document.getElementById('ds-a').addEventListener('input', e => {
-      params.slitWidth = Number(e.target.value);
-      document.getElementById('ds-val-a').textContent = params.slitWidth.toFixed(2) + ' mm';
-    });
-    document.getElementById('ds-l').addEventListener('input', e => {
-      params.screenDistance = Number(e.target.value);
-      document.getElementById('ds-val-l').textContent = params.screenDistance.toFixed(1) + ' m';
-    });
-    document.getElementById('ds-wave').addEventListener('change', e => {
-      showWave = e.target.checked;
-    });
+    document.getElementById('ds-wl').addEventListener('input', e => { params.wavelength = Number(e.target.value); document.getElementById('ds-val-wl').textContent = params.wavelength + ' nm'; });
+    document.getElementById('ds-d').addEventListener('input', e => { params.slitSeparation = Number(e.target.value); document.getElementById('ds-val-d').textContent = params.slitSeparation.toFixed(2) + ' mm'; });
+    document.getElementById('ds-a').addEventListener('input', e => { params.slitWidth = Number(e.target.value); document.getElementById('ds-val-a').textContent = params.slitWidth.toFixed(2) + ' mm'; });
+    document.getElementById('ds-l').addEventListener('input', e => { params.screenDistance = Number(e.target.value); document.getElementById('ds-val-l').textContent = params.screenDistance.toFixed(1) + ' m'; });
+    document.getElementById('ds-wave').addEventListener('change', e => { showWave = e.target.checked; });
   }
   buildControls();
 
-  let animId = 0;
-  let time = 0;
-
-  function setupCanvases() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = 320;
-    iCanvas.width = rect.width;
-    iCanvas.height = 160;
-  }
+  let animId = 0, time = 0;
+  function setupCanvases() { const r = canvas.parentElement.getBoundingClientRect(); canvas.width = r.width; canvas.height = 320; iCanvas.width = r.width; iCanvas.height = 160; }
 
   function draw() {
     const ctx = canvas.getContext('2d');
     const ictx = iCanvas.getContext('2d');
     if (!ctx || !ictx) return;
 
-    const W = canvas.width, H = canvas.height;
-    const iW = iCanvas.width, iH = iCanvas.height;
+    const W = canvas.width, H = canvas.height, iW = iCanvas.width, iH = iCanvas.height;
     const { wavelength, slitSeparation, slitWidth, screenDistance } = params;
-    const d = slitSeparation;
-    const a = slitWidth;
-    const L = screenDistance;
-    const lambda = wavelength * 1e-9;
+    const d_m = slitSeparation * 1e-3, a_m = slitWidth * 1e-3, L = screenDistance, lambda = wavelength * 1e-9;
+    const fringeWidth = lambda * L / d_m;
 
-    const scale = 180;
     const slitX = 100;
-    const screenX = W - 70;
+    const minScreenX = W * 0.45, maxScreenX = W * 0.85;
+    const screenX = minScreenX + (maxScreenX - minScreenX) * ((L - 0.2) / 2.8);
+    const cx = H / 2;
 
-    // Background
-    ctx.fillStyle = '#060b18';
-    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#0a0b10'; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.02)'; ctx.lineWidth = 0.5;
+    for (let y = 0; y < H; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
-    // Incident light
-    ctx.fillStyle = 'rgba(59, 130, 246, 0.04)';
-    for (let i = 0; i < 30; i++) {
-      const x = slitX - 20 - i * 3;
-      ctx.fillRect(x, 0, 2, H);
+    const incGrad = ctx.createLinearGradient(slitX - 100, 0, slitX - 6, 0);
+    incGrad.addColorStop(0, 'rgba(168, 85, 247, 0)');
+    incGrad.addColorStop(0.5, 'rgba(168, 85, 247, 0.03)');
+    incGrad.addColorStop(1, 'rgba(168, 85, 247, 0.08)');
+    ctx.fillStyle = incGrad; ctx.fillRect(slitX - 100, 0, 94, H);
+
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.04)'; ctx.lineWidth = 0.5;
+    for (let i = -8; i <= 8; i++) { const yPos = cx + i * 15; if (yPos > 0 && yPos < H) { ctx.beginPath(); ctx.moveTo(slitX - 90, yPos); ctx.lineTo(slitX - 6, yPos); ctx.stroke(); } }
+
+    ctx.fillStyle = '#11172a'; ctx.fillRect(slitX - 6, 0, 12, H);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.25)'; ctx.lineWidth = 1.5; ctx.strokeRect(slitX - 6, 0, 12, H);
+
+    const slitScale = 0.5 + L * 0.5;
+    const visualD = slitSeparation * 180 * slitScale;
+    const slitH = 30;
+    const s1 = cx - visualD / 2, s2 = cx + visualD / 2;
+
+    ctx.fillStyle = '#5a6a8a'; ctx.font = '10px Space Grotesk, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('S\u2081', slitX, s1 - slitH / 2 - 8);
+    ctx.fillText('S\u2082', slitX, s2 - slitH / 2 - 8);
+
+    // Visual slit width (a) — each slit opening shows the actual width
+    const visualSlitW = Math.max(2, a_m * 4000);
+    ctx.fillStyle = '#0a0b10';
+    ctx.fillRect(slitX - 2 - visualSlitW/2, s1 - slitH/2, visualSlitW, slitH);
+    ctx.fillRect(slitX - 2 - visualSlitW/2, s2 - slitH/2, visualSlitW, slitH);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)'; ctx.lineWidth = 0.5;
+    ctx.strokeRect(slitX - 2 - visualSlitW/2, s1 - slitH/2, visualSlitW, slitH);
+    ctx.strokeRect(slitX - 2 - visualSlitW/2, s2 - slitH/2, visualSlitW, slitH);
+    const aLabelX = slitX - 2 - visualSlitW/2 - 14;
+    ctx.strokeStyle = 'rgba(147, 51, 234, 0.3)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(aLabelX, s1 - slitH/2); ctx.lineTo(aLabelX, s1 + slitH/2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(aLabelX - 2, s1 - slitH/2); ctx.lineTo(aLabelX + 2, s1 - slitH/2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(aLabelX - 2, s1 + slitH/2); ctx.lineTo(aLabelX + 2, s1 + slitH/2); ctx.stroke();
+    ctx.fillStyle = '#5a6a8a'; ctx.font = '7px Space Grotesk, sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText('a', aLabelX - 4, s1 + 4);
+
+    // LIGHT RAYS from both slits to screen
+    const numRays = 30;
+    const t = time;
+    for (let i = 0; i < numRays; i++) {
+      const targetY = (i / numRays) * H;
+      const dx = screenX - slitX;
+      const dy1 = targetY - s1, dy2 = targetY - s2;
+      const r1 = Math.sqrt(dx*dx + dy1*dy1), r2 = Math.sqrt(dx*dx + dy2*dy2);
+      const pathDiff = r2 - r1;
+      const interference = Math.cos(Math.PI * pathDiff / (lambda * 1e6)) ** 2;
+      ctx.strokeStyle = `rgba(168, 85, 247, ${interference * 0.12})`; ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(slitX + 4, s1); ctx.lineTo(screenX - 2, targetY); ctx.stroke();
+      ctx.strokeStyle = `rgba(168, 85, 247, ${interference * 0.12})`;
+      ctx.beginPath(); ctx.moveTo(slitX + 4, s2); ctx.lineTo(screenX - 2, targetY); ctx.stroke();
     }
 
-    // Barrier
-    ctx.fillStyle = '#1e2438';
-    ctx.fillRect(slitX - 6, 0, 12, H);
-    ctx.strokeStyle = '#3b82f6';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(slitX - 6, 0, 12, H);
+    // Animated central guide rays
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.15)'; ctx.lineWidth = 1;
+    const guidePhase = Math.sin(t * 0.03) * 0.5 + 0.5;
+    ctx.globalAlpha = 0.1 + guidePhase * 0.15;
+    ctx.beginPath(); ctx.moveTo(slitX + 4, s1); ctx.lineTo(screenX - 2, cx); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(slitX + 4, s2); ctx.lineTo(screenX - 2, cx); ctx.stroke();
+    ctx.globalAlpha = 1;
 
-    // Slits
-    const slitH = 30;
-    const slitCenter1 = H / 2 - d * scale / 2;
-    const slitCenter2 = H / 2 + d * scale / 2;
-
-    ctx.fillStyle = '#060b18';
-    ctx.fillRect(slitX - 2, slitCenter1 - slitH / 2, 4, slitH);
-    ctx.fillRect(slitX - 2, slitCenter2 - slitH / 2, 4, slitH);
-
-    ctx.fillStyle = '#64748b';
-    ctx.font = '11px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('S₁', slitX, slitCenter1 - slitH / 2 - 8);
-    ctx.fillText('S₂', slitX, slitCenter2 - slitH / 2 - 8);
-
-    // Wavefronts
+    // Wavefronts from slits
     if (showWave) {
-      const t = time;
       for (let slit = 0; slit < 2; slit++) {
-        const sy = slit === 0 ? slitCenter1 : slitCenter2;
+        const sy = slit === 0 ? s1 : s2;
         const maxR = screenX - slitX;
         for (let r = 0; r < maxR; r += 6) {
-          const phase = (r / 60) * 2 * Math.PI * (lambda * 1e7) - t * 0.03;
-          const alpha = 0.05 + 0.08 * Math.max(0, Math.sin(phase));
-          const yRange = 2 + r * 0.008;
-          ctx.beginPath();
-          ctx.arc(slitX + r, sy, yRange, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(0, 212, 255, ${alpha})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
+          const phase = (r / 60) * 2 * Math.PI * (wavelength / 550) - t * 0.04;
+          const alpha = 0.03 + 0.05 * Math.max(0, Math.sin(phase));
+          const yRange = 2 + r * 0.006;
+          ctx.beginPath(); ctx.arc(slitX + r, sy, yRange, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`; ctx.lineWidth = 0.5; ctx.stroke();
         }
       }
     }
 
-    // Interference fringes on screen
-    for (let y = 0; y < H; y++) {
-      const theta = Math.atan2(y - H / 2, screenX - slitX);
-      const alpha = Math.PI * d * 1e-3 * Math.sin(theta) / lambda;
-      const intensity = Math.cos(alpha) * Math.cos(alpha);
+    // SCREEN FRINGE PATTERN
+    const pixPerM = 5000;
+    const maxM = Math.ceil((H / 2) / (fringeWidth * pixPerM));
+    for (let px = 0; px < H; px++) {
+      const y_m = (px - cx) / pixPerM;
+      const pathDiff = d_m * Math.sin(Math.atan2(y_m, L));
+      const alpha = Math.PI * pathDiff / lambda;
+      const beta = Math.PI * a_m * Math.sin(Math.atan2(y_m, L)) / lambda;
+      const interference = Math.cos(alpha) * Math.cos(alpha);
+      const envelope = Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2);
+      const intensity = interference * envelope;
       const v = Math.round(Math.min(intensity, 1) * 220);
-      ctx.fillStyle = `rgb(${v}, ${Math.round(v * 0.85)}, 255)`;
-      ctx.fillRect(screenX, y, 8, 1);
+      ctx.fillStyle = `rgb(${Math.round(v*0.5)}, ${Math.round(v*0.6)}, ${Math.round(v+55)})`;
+      ctx.fillRect(screenX, px, 8, 1);
     }
 
-    // Screen edge
-    ctx.strokeStyle = 'rgba(59, 130, 246, 0.3)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(screenX, 0);
-    ctx.lineTo(screenX, H);
-    ctx.stroke();
+    for (let px = 0; px < H; px += 2) {
+      const y_m = (px - cx) / pixPerM;
+      const pathDiff = d_m * Math.sin(Math.atan2(y_m, L));
+      const alpha = Math.PI * pathDiff / lambda;
+      const wave = Math.cos(alpha - t * 0.04);
+      const brightness = Math.max(0, wave * 0.5 + 0.5);
+      ctx.fillStyle = `rgba(168, 85, 247, ${brightness * 0.12})`;
+      ctx.fillRect(screenX - 2, px, 12, 2);
+    }
 
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '11px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Screen', screenX + 4, H - 8);
-
-    // Rays
-    const numRays = 120;
-    for (let i = 0; i < numRays; i++) {
-      const screenY = (i / numRays) * H;
-      const theta = Math.atan2(screenY - H / 2, screenX - slitX);
-      const alpha = Math.PI * d * 1e-3 * Math.sin(theta) / lambda;
-      const intensity = Math.cos(alpha) * Math.cos(alpha);
-      if (intensity > 0.01) {
-        ctx.strokeStyle = `rgba(0, 212, 255, ${intensity * 0.3})`;
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.moveTo(slitX + 6, H / 2);
-        ctx.lineTo(screenX - 2, screenY);
-        ctx.stroke();
+    for (let m = -maxM; m <= maxM; m++) {
+      const ym = m * fringeWidth, py = cx + ym * pixPerM;
+      if (py >= 0 && py < H) {
+        const halfW = Math.max(1, fringeWidth * pixPerM * 0.35);
+        ctx.fillStyle = `rgba(168, 85, 247, ${m === 0 ? 0.25 : 0.12})`;
+        ctx.fillRect(screenX + 2, py - halfW, 4, Math.max(1, halfW * 2));
       }
     }
 
-    // Labels
-    ctx.textAlign = 'left';
-    ctx.font = '10px Inter, sans-serif';
-    ctx.fillStyle = '#00d4ff';
-    ctx.fillText(`λ = ${wavelength} nm`, 16, 20);
-    ctx.fillStyle = '#3b82f6';
-    ctx.fillText(`d = ${slitSeparation.toFixed(2)} mm`, 16, 38);
-    ctx.fillStyle = '#06b6d4';
-    ctx.fillText(`a = ${slitWidth.toFixed(2)} mm`, 16, 56);
-    ctx.fillStyle = '#64748b';
-    ctx.fillText(`L = ${screenDistance.toFixed(1)} m`, 16, 74);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.2)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(screenX, 0); ctx.lineTo(screenX, H); ctx.stroke();
+    ctx.fillStyle = '#5a6a8a'; ctx.font = '10px Space Grotesk, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Screen', screenX, H - 8);
 
-    // ======== Intensity graph ========
+    ctx.strokeStyle = 'rgba(90, 106, 138, 0.15)'; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+    ctx.beginPath(); ctx.moveTo(slitX + 6, H + 8); ctx.lineTo(screenX, H + 8); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#5a6a8a'; ctx.font = '8px Space Grotesk, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('\u2190 L = ' + L.toFixed(1) + ' m \u2192', (slitX + screenX) / 2, H + 22);
+    ctx.strokeStyle = 'rgba(90, 106, 138, 0.2)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(slitX + 4, H + 5); ctx.lineTo(slitX + 4, H + 11); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(screenX, H + 5); ctx.lineTo(screenX, H + 11); ctx.stroke();
+
+    ctx.textAlign = 'right'; ctx.font = '10px JetBrains Mono, monospace';
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.45)'; ctx.fillText('\u03BB = ' + wavelength + ' nm', W - 6, 20);
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.4)'; ctx.fillText('d = ' + slitSeparation.toFixed(2) + ' mm', W - 6, 36);
+    ctx.fillStyle = 'rgba(147, 51, 234, 0.35)'; ctx.fillText('a = ' + slitWidth.toFixed(2) + ' mm', W - 6, 52);
+    ctx.fillStyle = 'rgba(90, 106, 138, 0.4)'; ctx.fillText('L = ' + L.toFixed(1) + ' m', W - 6, 68);
+    ctx.textAlign = 'left'; ctx.fillStyle = 'rgba(168, 85, 247, 0.3)'; ctx.font = '8px Space Grotesk, sans-serif';
+    ctx.fillText('\u03B2 = ' + (fringeWidth * 1e3).toFixed(2) + ' mm', 16, H - 6);
+
+    // INTENSITY GRAPH
     const iGrad = ictx.createLinearGradient(0, 0, 0, iH);
-    iGrad.addColorStop(0, '#060b18');
-    iGrad.addColorStop(1, '#0a0e1a');
-    ictx.fillStyle = iGrad;
-    ictx.fillRect(0, 0, iW, iH);
+    iGrad.addColorStop(0, '#0a0b10'); iGrad.addColorStop(0.5, '#0e0f1a'); iGrad.addColorStop(1, '#0a0b10');
+    ictx.fillStyle = iGrad; ictx.fillRect(0, 0, iW, iH);
 
     const centerX = iW / 2;
+    const maxY = 0.008, viewPix = iW / (2 * maxY);
     const points = [];
-    const viewAngle = 0.025;
     for (let px = 0; px < iW; px++) {
-      const theta = (px - centerX) / (iW / 2) * viewAngle;
-      const alpha = Math.PI * d * 1e-3 * Math.sin(theta) / lambda;
-      const intensity = Math.max(0, Math.cos(alpha) * Math.cos(alpha));
-      const y = iH - 8 - intensity * (iH - 28);
-      points.push({ x: px, y });
+      const y_m = (px - centerX) / viewPix, theta = Math.atan2(y_m, L);
+      const alpha = Math.PI * d_m * Math.sin(theta) / lambda;
+      const beta = Math.PI * a_m * Math.sin(theta) / lambda;
+      const interference = Math.cos(alpha) * Math.cos(alpha);
+      const envelope = Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2);
+      const intensity = Math.max(0, interference * envelope);
+      points.push({ x: px, y: iH - 8 - intensity * (iH - 28) });
     }
 
-    // Baseline
-    ictx.strokeStyle = 'rgba(59, 130, 246, 0.2)';
-    ictx.lineWidth = 1;
-    ictx.beginPath();
-    ictx.moveTo(0, iH - 8);
-    ictx.lineTo(iW, iH - 8);
-    ictx.stroke();
+    ictx.strokeStyle = 'rgba(168, 85, 247, 0.12)'; ictx.lineWidth = 1;
+    ictx.beginPath(); ictx.moveTo(0, iH - 8); ictx.lineTo(iW, iH - 8); ictx.stroke();
 
-    // Curve
+    const envPoints = [];
+    for (let px = 0; px < iW; px++) {
+      const theta = (px - centerX) / (iW / 2) * 0.025 / Math.sqrt(L);
+      const beta = Math.PI * a_m * Math.sin(theta) / lambda;
+      const envelope = Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2);
+      envPoints.push({ x: px, y: iH - 8 - envelope * (iH - 28) });
+    }
+    if (envPoints.length > 1) {
+      ictx.beginPath(); ictx.moveTo(envPoints[0].x, envPoints[0].y);
+      for (let i = 1; i < envPoints.length; i++) ictx.lineTo(envPoints[i].x, envPoints[i].y);
+      ictx.strokeStyle = 'rgba(147, 51, 234, 0.12)'; ictx.lineWidth = 1; ictx.setLineDash([3, 3]); ictx.stroke(); ictx.setLineDash([]);
+    }
     if (points.length > 1) {
-      ictx.beginPath();
-      ictx.moveTo(points[0].x, points[0].y);
+      ictx.beginPath(); ictx.moveTo(points[0].x, points[0].y);
       for (let i = 1; i < points.length; i++) ictx.lineTo(points[i].x, points[i].y);
-      ictx.strokeStyle = '#00d4ff';
-      ictx.lineWidth = 2;
-      ictx.stroke();
+      ictx.strokeStyle = '#a855f7'; ictx.lineWidth = 2; ictx.stroke();
     }
-
-    // Fill
     if (points.length > 1) {
-      ictx.beginPath();
-      ictx.moveTo(points[0].x, iH - 8);
+      ictx.beginPath(); ictx.moveTo(points[0].x, iH - 8);
       for (let i = 0; i < points.length; i++) ictx.lineTo(points[i].x, points[i].y);
-      ictx.lineTo(points[points.length - 1].x, iH - 8);
-      ictx.closePath();
-      ictx.fillStyle = 'rgba(0, 212, 255, 0.08)';
-      ictx.fill();
+      ictx.lineTo(points[points.length - 1].x, iH - 8); ictx.closePath();
+      ictx.fillStyle = 'rgba(168, 85, 247, 0.04)'; ictx.fill();
     }
 
-    // Find peaks and troughs
-    const peakPxs = [], troughPxs = [];
+    const peakPxs = [];
     for (let i = 2; i < points.length - 2; i++) {
       if (points[i].y < points[i - 1].y && points[i].y <= points[i + 1].y) peakPxs.push(points[i].x);
-      if (points[i].y > points[i - 1].y && points[i].y >= points[i + 1].y) troughPxs.push(points[i].x);
     }
-
-    // Title
-    ictx.fillStyle = '#64748b';
-    ictx.font = '9px Inter, sans-serif';
-    ictx.textAlign = 'center';
-    ictx.fillText('Interference Pattern (I vs θ)', iW / 2, 12);
-
-    // Labels
-    const labelTopY = 30;
+    ictx.fillStyle = '#5a6a8a'; ictx.font = '9px Space Grotesk, sans-serif'; ictx.textAlign = 'center';
+    ictx.fillText('Relative Intensity I/I\u2080', iW / 2, 12);
     if (peakPxs.length > 0) {
-      const cx = peakPxs[0];
-      ictx.fillStyle = '#00d4ff';
-      ictx.font = '8px Inter, sans-serif';
-      ictx.textAlign = 'center';
-      ictx.fillText('Central Bright', cx, labelTopY);
-      ictx.fillText('Fringe (n=0)', cx, labelTopY + 10);
-
-      // Fringe width bracket
-      if (peakPxs.length > 1) {
-        const p1 = peakPxs[1];
-        const bracketY = labelTopY + 24;
-        ictx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-        ictx.lineWidth = 1;
-        ictx.beginPath();
-        ictx.moveTo(cx, bracketY);
-        ictx.lineTo(p1, bracketY);
-        ictx.stroke();
-        ictx.beginPath();
-        ictx.moveTo(cx, bracketY - 4);
-        ictx.lineTo(cx, bracketY + 4);
-        ictx.stroke();
-        ictx.beginPath();
-        ictx.moveTo(p1, bracketY - 4);
-        ictx.lineTo(p1, bracketY + 4);
-        ictx.stroke();
-        ictx.fillStyle = '#94a3b8';
-        ictx.font = '8px Inter, sans-serif';
-        ictx.textAlign = 'center';
-        ictx.fillText('Fringe Width (β)', (cx + p1) / 2, bracketY - 3);
-      }
-
-      if (peakPxs.length > 1) {
-        const p1 = peakPxs[1];
-        ictx.fillStyle = '#00d4ff';
-        ictx.font = '8px Inter, sans-serif';
-        ictx.textAlign = 'center';
-        ictx.fillText('Bright Fringe', p1, labelTopY);
-        ictx.fillText('(n=1)', p1, labelTopY + 10);
-      }
-
-      if (troughPxs.length > 0) {
-        const t1 = troughPxs[0];
-        if (t1 > 0 && t1 < iW) {
-          ictx.fillStyle = '#64748b';
-          ictx.font = '8px Inter, sans-serif';
-          ictx.textAlign = 'center';
-          ictx.fillText('Dark Fringe', t1, iH - 16);
-        }
-      }
+      ictx.fillStyle = '#a855f7'; ictx.font = '8px Space Grotesk, sans-serif';
+      ictx.fillText('Central (n=0)', peakPxs[0], 22);
+      if (peakPxs.length > 1) ictx.fillText('n=1', peakPxs[1], 22);
+      if (peakPxs.length > 2) ictx.fillText('n=2', peakPxs[2], 22);
     }
+    ictx.fillStyle = 'rgba(147, 51, 234, 0.35)'; ictx.font = '7px Space Grotesk, sans-serif'; ictx.textAlign = 'left';
+    ictx.fillText('- - Diffraction envelope (a = ' + slitWidth.toFixed(2) + ' mm)', 10, iH - 4);
 
-    time++;
-    animId = requestAnimationFrame(draw);
+    time++; animId = requestAnimationFrame(draw);
   }
 
-  function start() {
-    cancelAnimationFrame(animId);
-    setupCanvases();
-    time = 0;
-    animId = requestAnimationFrame(draw);
-  }
-
+  function start() { cancelAnimationFrame(animId); setupCanvases(); time = 0; animId = requestAnimationFrame(draw); }
   const resizeHandler = () => { setupCanvases(); };
-  window.addEventListener('resize', resizeHandler);
-  start();
-
-  // MutationObserver to detect control changes (sliders already update params directly)
-  // Controls already have event listeners that update params, and draw reads params each frame
-  // No need for extra observer since draw loop reads params live
-
-  // Store cleanup
-  const cleanup = () => {
-    cancelAnimationFrame(animId);
-    window.removeEventListener('resize', resizeHandler);
-  };
-  // We need to store this so it gets called when navigating away
-  window.__dsCleanup = cleanup;
+  window.addEventListener('resize', resizeHandler); start();
+  window.__dsCleanup = () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resizeHandler); };
 }
 
 // ========================================================================
-// SINGLE SLIT DIFFRACTION EXPERIMENT
+// SINGLE SLIT DIFFRACTION — Full Remake
 // ========================================================================
 function renderSingleSlit() {
   ROOT.innerHTML = `
-    <div class="lab-detail animate-fade-in">
-      <button class="back-btn" id="ss-back">← Back to Labs</button>
+    <div class="lab-detail anim-in">
+      <button class="back-btn" id="ss-back"><i class="fas fa-chevron-left"></i> Back</button>
       <div class="lab-detail-header">
-        <span class="lab-detail-icon">🔆</span>
+        <div class="lab-detail-icon"><i class="fas fa-expand-alt"></i></div>
         <div>
           <h1>Single Slit Diffraction</h1>
-          <p class="lab-detail-desc">Observe the diffraction pattern from a single slit. The central maximum is twice as wide as the secondary maxima.</p>
+          <p class="lab-detail-desc">a sin &theta; = m&lambda; — Huygens secondary wavelets from across the slit</p>
         </div>
       </div>
-      <div class="lab-canvas-wrapper glass-card-static">
+      <div class="lab-canvas-wrapper card-static">
         <div class="canvas-container"><canvas id="ss-canvas" class="lab-canvas"></canvas></div>
         <div class="intensity-container"><canvas id="ss-intensity" class="intensity-canvas"></canvas></div>
       </div>
-      <div class="lab-controls glass-card-static" id="ss-controls"></div>
-      <div class="lab-info glass-card-static">
-        <h3>About Single Slit Diffraction</h3>
-        <p>When light passes through a narrow slit, it spreads out (diffracts) due to the wave nature of light. The resulting pattern has a bright central maximum with alternating dark and bright fringes on either side.</p>
-        <div class="info-formula">a sin θ = nλ (minima)</div>
-        <p><strong>Key observations:</strong> The central maximum is twice as wide as the secondary maxima. The intensity of successive fringes decreases rapidly (secondary maxima are ~4.7% of the central peak). Decreasing slit width (a) widens the diffraction pattern.</p>
+      <div class="lab-controls card-static" id="ss-controls"></div>
+      <div class="lab-info card-static">
+        <h3><i class="fas fa-flask"></i> About Single Slit Diffraction</h3>
+        <p>Light passing through a narrow slit of width <em>a</em> spreads out. Each point along the slit acts as a Huygens secondary source. Minima occur at a sin &theta; = m&lambda;. The central maximum is twice as wide as secondary maxima.</p>
+        <div class="info-formula">a sin &theta; = m&lambda; (minima) &nbsp;&nbsp; I(&theta;) = I&#x2080; [sin(&beta;)/&beta;]&sup2; &nbsp;&nbsp; &beta; = &pi;a sin(&theta;) / &lambda;</div>
+        <p>Smaller <em>a</em> widens the pattern. Larger <em>L</em> magnifies it. Longer <em>&lambda;</em> widens it. The first minimum angular position: &theta; = &lambda;/a.</p>
       </div>
     </div>
   `;
@@ -652,7 +618,6 @@ function renderSingleSlit() {
   document.getElementById('ss-back').addEventListener('click', () => navigate('labs'));
 
   const params = { wavelength: 550, slitWidth: 0.16, screenDistance: 1.0 };
-
   const canvas = document.getElementById('ss-canvas');
   const iCanvas = document.getElementById('ss-intensity');
   const controlsEl = document.getElementById('ss-controls');
@@ -661,558 +626,395 @@ function renderSingleSlit() {
     controlsEl.innerHTML = `
       <div class="controls-row">
         <div class="control-group">
-          <label>Wavelength (λ) <span class="control-val" id="ss-val-wl">${params.wavelength} nm</span></label>
+          <label><span><i class="fas fa-palette" style="margin-right:4px;"></i> Wavelength (&lambda;)</span> <span class="control-val" id="ss-val-wl">${params.wavelength} nm</span></label>
           <input type="range" min="380" max="780" value="${params.wavelength}" id="ss-wl">
         </div>
         <div class="control-group">
-          <label>Slit Width (a) <span class="control-val" id="ss-val-a">${params.slitWidth.toFixed(2)} mm</span></label>
+          <label><span><i class="fas fa-arrows-alt-v" style="margin-right:4px;"></i> Slit Width (a)</span> <span class="control-val" id="ss-val-a">${params.slitWidth.toFixed(2)} mm</span></label>
           <input type="range" min="0.04" max="0.5" step="0.01" value="${params.slitWidth}" id="ss-a">
         </div>
       </div>
       <div class="controls-row">
         <div class="control-group">
-          <label>Screen Distance (L) <span class="control-val" id="ss-val-l">${params.screenDistance.toFixed(1)} m</span></label>
+          <label><span><i class="fas fa-ruler" style="margin-right:4px;"></i> Screen Distance (L)</span> <span class="control-val" id="ss-val-l">${params.screenDistance.toFixed(1)} m</span></label>
           <input type="range" min="0.2" max="3.0" step="0.1" value="${params.screenDistance}" id="ss-l">
         </div>
       </div>
     `;
-
-    document.getElementById('ss-wl').addEventListener('input', e => {
-      params.wavelength = Number(e.target.value);
-      document.getElementById('ss-val-wl').textContent = params.wavelength + ' nm';
-    });
-    document.getElementById('ss-a').addEventListener('input', e => {
-      params.slitWidth = Number(e.target.value);
-      document.getElementById('ss-val-a').textContent = params.slitWidth.toFixed(2) + ' mm';
-    });
-    document.getElementById('ss-l').addEventListener('input', e => {
-      params.screenDistance = Number(e.target.value);
-      document.getElementById('ss-val-l').textContent = params.screenDistance.toFixed(1) + ' m';
-    });
+    document.getElementById('ss-wl').addEventListener('input', e => { params.wavelength = Number(e.target.value); document.getElementById('ss-val-wl').textContent = params.wavelength + ' nm'; });
+    document.getElementById('ss-a').addEventListener('input', e => { params.slitWidth = Number(e.target.value); document.getElementById('ss-val-a').textContent = params.slitWidth.toFixed(2) + ' mm'; });
+    document.getElementById('ss-l').addEventListener('input', e => { params.screenDistance = Number(e.target.value); document.getElementById('ss-val-l').textContent = params.screenDistance.toFixed(1) + ' m'; });
   }
   buildControls();
 
-  let animId = 0;
-
-  function setupCanvases() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width;
-    canvas.height = 320;
-    iCanvas.width = rect.width;
-    iCanvas.height = 160;
-  }
+  let animId = 0, time = 0;
+  function setupCanvases() { const r = canvas.parentElement.getBoundingClientRect(); canvas.width = r.width; canvas.height = 320; iCanvas.width = r.width; iCanvas.height = 160; }
 
   function draw() {
     const ctx = canvas.getContext('2d');
     const ictx = iCanvas.getContext('2d');
     if (!ctx || !ictx) return;
 
-    const W = canvas.width, H = canvas.height;
-    const iW = iCanvas.width, iH = iCanvas.height;
+    const W = canvas.width, H = canvas.height, iW = iCanvas.width, iH = iCanvas.height;
     const { wavelength, slitWidth, screenDistance } = params;
-    const a = slitWidth;
-    const lambda = wavelength;
+    const a = slitWidth * 1e-3, L = screenDistance, lambda = wavelength * 1e-9;
 
-    ctx.fillStyle = '#060b18';
-    ctx.fillRect(0, 0, W, H);
-
-    // Barrier
     const slitX = 100;
-    const screenX = W - 50;
+    const minScreenX = W * 0.48, maxScreenX = W * 0.85;
+    const screenX = minScreenX + (maxScreenX - minScreenX) * ((L - 0.2) / 2.8);
+    const cx = H / 2;
+    const t = time;
 
-    ctx.fillStyle = '#1e2438';
-    ctx.fillRect(slitX - 6, 0, 12, H);
-    ctx.strokeStyle = '#3b82f6';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(slitX - 6, 0, 12, H);
+    // --- Clean background ---
+    ctx.fillStyle = '#0a0b10'; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.015)'; ctx.lineWidth = 0.5;
+    for (let y = 0; y < H; y += 30) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
 
-    // Slit opening
-    const slitH = a * 120;
-    const slitY = (H - slitH) / 2;
-    ctx.fillStyle = '#060b18';
-    ctx.fillRect(slitX - 2, slitY, 4, slitH);
+    // --- Incident light glow ---
+    const incGrad = ctx.createLinearGradient(slitX - 100, 0, slitX - 6, 0);
+    incGrad.addColorStop(0, 'rgba(168, 85, 247, 0)');
+    incGrad.addColorStop(0.5, 'rgba(168, 85, 247, 0.02)');
+    incGrad.addColorStop(1, 'rgba(168, 85, 247, 0.07)');
+    ctx.fillStyle = incGrad; ctx.fillRect(slitX - 100, 0, 94, H);
 
-    ctx.fillStyle = '#64748b';
-    ctx.font = '11px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('a', slitX, slitY - 8);
-
-    // Incident wavefronts
-    ctx.fillStyle = 'rgba(59, 130, 246, 0.04)';
-    for (let i = 0; i < 25; i++) {
-      ctx.fillRect(slitX - 20 - i * 4, 0, 2, H);
+    // --- Incident wavefronts approaching ---
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.03)'; ctx.lineWidth = 0.5;
+    for (let i = -8; i <= 8; i++) {
+      const yPos = cx + i * 15;
+      if (yPos > 0 && yPos < H) { ctx.beginPath(); ctx.moveTo(slitX - 90, yPos); ctx.lineTo(slitX - 6, yPos); ctx.stroke(); }
     }
 
-    // Huygens wavelets from slit
-    const waveCount = 50;
-    for (let i = 0; i < waveCount; i++) {
-      const wy = slitY + (i / waveCount) * slitH;
-      for (let r = 0; r < screenX - slitX; r += 4) {
-        const theta = Math.atan2(wy - H / 2, r);
-        const beta = Math.PI * a * 1e-3 * Math.sin(theta) / (lambda * 1e-9);
-        const intensity = Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2);
-        if (intensity > 0.05) {
-          const alpha = 0.02 * intensity;
-          const yRange = 1 + r * 0.006;
-          ctx.beginPath();
-          ctx.arc(slitX + r, wy, yRange, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(0, 212, 255, ${alpha})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
+    // --- Barrier ---
+    const barrierHalf = 6;
+    ctx.fillStyle = '#11172a'; ctx.fillRect(slitX - barrierHalf, 0, barrierHalf * 2, H);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.25)'; ctx.lineWidth = 1.5; ctx.strokeRect(slitX - barrierHalf, 0, barrierHalf * 2, H);
 
-    // Diffracted rays
-    const numRays = 200;
-    for (let i = 0; i < numRays; i++) {
-      const sy = slitY + (i / numRays) * slitH;
-      const screenY = (i / numRays) * H;
-      const theta = Math.atan2(screenY - H / 2, screenX - slitX);
-      const beta = Math.PI * a * 1e-3 * Math.sin(theta) / (lambda * 1e-9);
-      const intensity = Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2);
-      if (intensity > 0.03) {
-        ctx.strokeStyle = `rgba(0, 212, 255, ${intensity * 0.3})`;
-        ctx.lineWidth = 0.5;
+    // --- Slit opening: the actual gap showing width 'a' ---
+    const visualSlitH = Math.max(3, slitWidth * 160);
+    const slitTop = cx - visualSlitH / 2;
+    const slitBottom = cx + visualSlitH / 2;
+
+    // Cut out opening in barrier
+    ctx.fillStyle = '#0a0b10';
+    ctx.clearRect(slitX - barrierHalf, slitTop, barrierHalf * 2, visualSlitH);
+
+    // Border around slit opening
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)'; ctx.lineWidth = 1;
+    ctx.strokeRect(slitX - barrierHalf, slitTop, barrierHalf * 2, visualSlitH);
+
+    // --- Dimension arrow for slit width 'a' (right side of barrier) ---
+    const arrowX = slitX + barrierHalf + 16;
+    ctx.strokeStyle = 'rgba(147, 51, 234, 0.4)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(arrowX, slitTop); ctx.lineTo(arrowX, slitBottom); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(arrowX - 3, slitTop + 3); ctx.lineTo(arrowX, slitTop); ctx.lineTo(arrowX + 3, slitTop + 3); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(arrowX - 3, slitBottom - 3); ctx.lineTo(arrowX, slitBottom); ctx.lineTo(arrowX + 3, slitBottom - 3); ctx.stroke();
+    ctx.fillStyle = '#5a6a8a'; ctx.font = '8px Space Grotesk, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('a = ' + slitWidth.toFixed(2) + ' mm', arrowX, slitTop - 6);
+
+    // --- S1 label above slit ---
+    ctx.fillStyle = '#5a6a8a'; ctx.font = '10px Space Grotesk, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('S\u2081', slitX, slitTop - 14);
+
+    // --- Huygens wavelets from multiple secondary sources across slit ---
+    const numSources = Math.max(3, Math.min(14, Math.round(visualSlitH / 6)));
+    for (let s = 0; s < numSources; s++) {
+      const sy = slitTop + (s / (numSources - 1 || 1)) * visualSlitH;
+      const maxR = screenX - slitX;
+      for (let r = 8; r < maxR; r += 10) {
+        const phase = (r / 60) * 2 * Math.PI * (wavelength / 550) - t * 0.035;
+        const alpha = 0.015 + 0.03 * Math.max(0, Math.sin(phase));
         ctx.beginPath();
-        ctx.moveTo(slitX + 6, sy);
-        ctx.lineTo(screenX - 2, screenY);
-        ctx.stroke();
+        ctx.arc(slitX + 4 + r, sy, 1.2 + r * 0.003, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`; ctx.lineWidth = 0.3; ctx.stroke();
       }
     }
 
-    // Diffraction fringes on screen
-    for (let y = 0; y < H; y++) {
-      const theta = Math.atan2(y - H / 2, screenX - slitX);
-      const beta = Math.PI * a * 1e-3 * Math.sin(theta) / (lambda * 1e-9);
+    // --- Rays from across slit to screen, opacity = diffraction intensity ---
+    const numRays = 40;
+    for (let i = 0; i < numRays; i++) {
+      const sy = slitTop + (i / (numRays - 1)) * visualSlitH;
+      const targetY = cx + (i / (numRays - 1) - 0.5) * H * 0.85;
+      const dy = targetY - sy, dx = screenX - slitX;
+      const theta = Math.atan2(dy, dx);
+      const beta = Math.PI * a * Math.sin(theta) / lambda;
       const intensity = Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2);
-      const v = Math.round(Math.min(intensity, 1) * 220);
-      ctx.fillStyle = `rgb(${v}, ${Math.round(v * 0.8)}, ${Math.round(v * 0.9 + 35)})`;
-      ctx.fillRect(screenX, y, 8, 1);
+      if (intensity > 0.02) {
+        ctx.strokeStyle = `rgba(168, 85, 247, ${0.08 + intensity * 0.18})`; ctx.lineWidth = 0.8;
+        ctx.beginPath(); ctx.moveTo(slitX + 6, sy); ctx.lineTo(screenX - 2, targetY); ctx.stroke();
+      }
     }
 
-    ctx.strokeStyle = 'rgba(59, 130, 246, 0.3)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(screenX, 0);
-    ctx.lineTo(screenX, H);
-    ctx.stroke();
+    // --- Screen fringe pattern ---
+    const angularSpread = 0.15;
+    const screenPixelScale = H * 0.85;
+    for (let px = 0; px < H; px++) {
+      const normalizedY = (px - cx) / screenPixelScale;
+      const theta = normalizedY * angularSpread;
+      const beta = Math.PI * a * Math.sin(theta) / lambda;
+      const intensity = Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2);
+      const v = Math.round(Math.min(intensity, 1) * 200);
+      ctx.fillStyle = `rgb(${Math.round(v*0.5)}, ${Math.round(v*0.6)}, ${Math.round(v+55)})`;
+      ctx.fillRect(screenX, px, 8, 1);
+    }
 
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '11px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Screen', screenX + 4, H - 8);
+    // --- Animated traveling wave on screen ---
+    for (let px = 0; px < H; px += 2) {
+      const normalizedY = (px - cx) / screenPixelScale;
+      const theta = normalizedY * angularSpread;
+      const beta = Math.PI * a * Math.sin(theta) / lambda;
+      const envelope = Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2);
+      const wave = Math.sin(beta - t * 0.035) * Math.sqrt(envelope);
+      const brightness = Math.max(0, wave * 0.5 + 0.5);
+      ctx.fillStyle = `rgba(168, 85, 247, ${brightness * 0.12})`;
+      ctx.fillRect(screenX - 2, px, 12, 2);
+    }
 
-    // Annotate central maximum
-    const centralY = H / 2;
-    ctx.fillStyle = 'rgba(0, 212, 255, 0.5)';
-    ctx.font = '9px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('← Central Maximum →', screenX + 4, centralY - 10);
+    // --- Screen vertical line ---
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.2)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(screenX, 0); ctx.lineTo(screenX, H); ctx.stroke();
+    ctx.fillStyle = '#5a6a8a'; ctx.font = '10px Space Grotesk, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Screen', screenX, H - 8);
 
-    // Labels
-    ctx.fillStyle = '#00d4ff';
-    ctx.font = '10px Inter, sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(`λ = ${wavelength} nm`, 16, 20);
-    ctx.fillStyle = '#3b82f6';
-    ctx.fillText(`a = ${slitWidth.toFixed(2)} mm`, 16, 38);
-    ctx.fillStyle = '#64748b';
-    ctx.fillText(`L = ${screenDistance.toFixed(1)} m`, 16, 56);
+    // --- Label central maximum ---
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.3)'; ctx.font = '9px Space Grotesk, sans-serif';
+    ctx.fillText('Central Maximum', screenX, 22);
+    const firstMinWidth = 2 * L * lambda / a;
+    ctx.fillStyle = 'rgba(90, 106, 138, 0.35)'; ctx.font = '7px Space Grotesk, sans-serif';
+    ctx.fillText('(width = 2\u03BBL/a = ' + (firstMinWidth * 1e3).toFixed(1) + ' mm)', screenX, 34);
 
-    // ======== Intensity graph ========
+    // --- L dimension line ---
+    ctx.strokeStyle = 'rgba(90, 106, 138, 0.15)'; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+    ctx.beginPath(); ctx.moveTo(slitX + 6, H + 8); ctx.lineTo(screenX, H + 8); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#5a6a8a'; ctx.font = '8px Space Grotesk, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('\u2190 L = ' + L.toFixed(1) + ' m \u2192', (slitX + screenX) / 2, H + 22);
+
+    // --- Info overlay ---
+    ctx.textAlign = 'right'; ctx.font = '10px JetBrains Mono, monospace';
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.45)'; ctx.fillText('\u03BB = ' + wavelength + ' nm', W - 8, 20);
+    ctx.fillStyle = 'rgba(168, 85, 247, 0.4)'; ctx.fillText('a = ' + slitWidth.toFixed(2) + ' mm', W - 8, 36);
+    ctx.fillStyle = 'rgba(90, 106, 138, 0.4)'; ctx.fillText('L = ' + L.toFixed(1) + ' m', W - 8, 52);
+
+    // --- First minimum angle ---
+    const theta1 = Math.asin(lambda / a);
+    ctx.fillStyle = 'rgba(90, 106, 138, 0.3)'; ctx.font = '8px Space Grotesk, sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('\u03B8\u2081 = ' + (theta1 * 180 / Math.PI).toFixed(2) + '\u00B0  (1st min)', 16, 18);
+
+    // ===== INTENSITY GRAPH =====
     const iGrad = ictx.createLinearGradient(0, 0, 0, iH);
-    iGrad.addColorStop(0, '#060b18');
-    iGrad.addColorStop(1, '#0a0e1a');
-    ictx.fillStyle = iGrad;
-    ictx.fillRect(0, 0, iW, iH);
+    iGrad.addColorStop(0, '#0a0b10'); iGrad.addColorStop(0.5, '#0e0f1a'); iGrad.addColorStop(1, '#0a0b10');
+    ictx.fillStyle = iGrad; ictx.fillRect(0, 0, iW, iH);
 
     const centerX = iW / 2;
-    const viewAngle = 0.035;
+    const maxAngle = 0.035;
     const points = [];
     for (let px = 0; px < iW; px++) {
-      const theta = (px - centerX) / (iW / 2) * viewAngle;
-      const beta = Math.PI * a * 1e-3 * Math.sin(theta) / (lambda * 1e-9);
+      const theta = (px - centerX) / (iW / 2) * maxAngle;
+      const beta = Math.PI * a * Math.sin(theta) / lambda;
       const intensity = Math.max(0, Math.abs(beta) < 0.001 ? 1 : Math.pow(Math.sin(beta) / beta, 2));
-      const display = Math.sqrt(intensity);
-      const y = iH - 8 - display * (iH - 28);
-      points.push({ x: px, y });
+      points.push({ x: px, y: iH - 8 - intensity * (iH - 28) });
     }
 
-    ictx.strokeStyle = 'rgba(59, 130, 246, 0.2)';
-    ictx.lineWidth = 1;
-    ictx.beginPath();
-    ictx.moveTo(0, iH - 8);
-    ictx.lineTo(iW, iH - 8);
-    ictx.stroke();
+    ictx.strokeStyle = 'rgba(168, 85, 247, 0.12)'; ictx.lineWidth = 1;
+    ictx.beginPath(); ictx.moveTo(0, iH - 8); ictx.lineTo(iW, iH - 8); ictx.stroke();
+
+    // Axis ticks
+    ictx.fillStyle = '#5a6a8a'; ictx.font = '7px Space Grotesk, sans-serif'; ictx.textAlign = 'center';
+    ictx.fillText('-2\u03BB/a', 10, iH - 2);
+    ictx.fillText('-\u03BB/a', 30, iH - 2);
+    ictx.fillText('0', centerX, iH - 2);
+    ictx.fillText('\u03BB/a', iW - 30, iH - 2);
+    ictx.fillText('2\u03BB/a', iW - 10, iH - 2);
 
     if (points.length > 1) {
-      ictx.beginPath();
-      ictx.moveTo(points[0].x, points[0].y);
+      ictx.beginPath(); ictx.moveTo(points[0].x, points[0].y);
       for (let i = 1; i < points.length; i++) ictx.lineTo(points[i].x, points[i].y);
-      ictx.strokeStyle = '#06b6d4';
-      ictx.lineWidth = 2;
-      ictx.stroke();
+      ictx.strokeStyle = '#a855f7'; ictx.lineWidth = 2; ictx.stroke();
     }
-
     if (points.length > 1) {
-      ictx.beginPath();
-      ictx.moveTo(points[0].x, iH - 8);
+      ictx.beginPath(); ictx.moveTo(points[0].x, iH - 8);
       for (let i = 0; i < points.length; i++) ictx.lineTo(points[i].x, points[i].y);
-      ictx.lineTo(points[points.length - 1].x, iH - 8);
-      ictx.closePath();
-      ictx.fillStyle = 'rgba(6, 182, 212, 0.08)';
-      ictx.fill();
+      ictx.lineTo(points[points.length - 1].x, iH - 8); ictx.closePath();
+      ictx.fillStyle = 'rgba(168, 85, 247, 0.04)'; ictx.fill();
     }
 
-    // Find peaks and minima
-    const peakPxs = [];
-    const minimaPxs = [];
-    for (let i = 2; i < points.length - 2; i++) {
-      if (points[i].y < points[i - 1].y && points[i].y <= points[i + 1].y) peakPxs.push(points[i].x);
-      if (points[i].y > points[i - 1].y && points[i].y >= points[i + 1].y) {
-        const intensityVal = 1 - (points[i].y - (iH - 8)) / (-points[i].y + iH - 8);
-        if (intensityVal < 0.1) minimaPxs.push(points[i].x);
+    // Find peak positions
+    const peakIndices = [];
+    for (let i = 3; i < points.length - 3; i++) {
+      if (points[i].y < points[i - 1].y && points[i].y < points[i - 2].y &&
+          points[i].y <= points[i + 1].y && points[i].y <= points[i + 2].y) {
+        peakIndices.push(i);
       }
     }
 
-    // Title
-    ictx.fillStyle = '#64748b';
-    ictx.font = '9px Inter, sans-serif';
-    ictx.textAlign = 'center';
-    ictx.fillText('Single Slit Diffraction Pattern (I vs θ)', iW / 2, 12);
+    ictx.fillStyle = '#5a6a8a'; ictx.font = '9px Space Grotesk, sans-serif'; ictx.textAlign = 'center';
+    ictx.fillText('Relative Intensity I/I\u2080', iW / 2, 12);
 
-    // Labels
-    const labelTopY = 30;
-    if (peakPxs.length > 0) {
-      const cx = peakPxs[0];
-      ictx.fillStyle = '#00d4ff';
-      ictx.font = '8px Inter, sans-serif';
-      ictx.textAlign = 'center';
-      ictx.fillText('Central Maximum', cx, labelTopY);
-      ictx.fillText('(2× wider)', cx, labelTopY + 10);
+    if (peakIndices.length > 0) {
+      const cIdx = peakIndices[0];
+      const cxPx = points[cIdx].x;
+      ictx.fillStyle = '#a855f7'; ictx.font = '8px Space Grotesk, sans-serif';
+      ictx.fillText('Central Max', cxPx, 24);
 
-      for (let i = 1; i < Math.min(peakPxs.length, 5); i++) {
-        const sx = peakPxs[i];
-        if (sx > 10 && sx < iW - 10) {
-          ictx.fillStyle = i % 2 === 1 ? '#06b6d4' : '#3b82f6';
-          ictx.font = '7px Inter, sans-serif';
-          ictx.textAlign = 'center';
-          const ord = i === 1 ? '1st' : i === 2 ? '2nd' : i === 3 ? '3rd' : `${i}th`;
-          ictx.fillText(`${ord} Secondary`, sx, iH - 26);
-          ictx.fillText('Maxima', sx, iH - 18);
+      for (let pi = 1; pi < Math.min(peakIndices.length, 5); pi++) {
+        const sx = points[peakIndices[pi]].x;
+        if (sx > 20 && sx < iW - 20) {
+          const intVal = (iH - 8 - points[peakIndices[pi]].y) / (iH - 28);
+          const ord = pi === 1 ? '1st' : pi === 2 ? '2nd' : pi === 3 ? '3rd' : pi + 'th';
+          ictx.fillStyle = '#5a6a8a'; ictx.font = '7px Space Grotesk, sans-serif';
+          ictx.fillText(ord + ' max (' + (intVal * 100).toFixed(1) + '%)', sx, iH - 16);
         }
       }
 
-      for (let i = 0; i < Math.min(minimaPxs.length, 5); i++) {
-        const mx = minimaPxs[i];
+      // Label minima
+      for (let pi = 0; pi < peakIndices.length - 1; pi++) {
+        const gap = peakIndices[pi + 1] - peakIndices[pi];
+        const minIdx = peakIndices[pi] + Math.floor(gap / 2);
+        const mx = points[minIdx].x;
         if (mx > 10 && mx < iW - 10) {
-          ictx.fillStyle = '#64748b';
-          ictx.font = '7px Inter, sans-serif';
-          ictx.textAlign = 'center';
-          ictx.fillText('Dark', mx, iH - 26);
-          ictx.fillText('Fringe', mx, iH - 18);
+          const mVal = pi + 1;
+          ictx.fillStyle = '#5a6a8a'; ictx.font = '7px Space Grotesk, sans-serif'; ictx.textAlign = 'center';
+          ictx.fillText('m=' + mVal + ' min', mx, points[minIdx].y - 6);
         }
       }
     }
 
-    animId = requestAnimationFrame(draw);
+    time++; animId = requestAnimationFrame(draw);
   }
 
-  function start() {
-    cancelAnimationFrame(animId);
-    setupCanvases();
-    animId = requestAnimationFrame(draw);
-  }
-
+  function start() { cancelAnimationFrame(animId); setupCanvases(); time = 0; animId = requestAnimationFrame(draw); }
   const resizeHandler = () => { setupCanvases(); };
-  window.addEventListener('resize', resizeHandler);
-  start();
-
-  window.__ssCleanup = () => {
-    cancelAnimationFrame(animId);
-    window.removeEventListener('resize', resizeHandler);
-  };
+  window.addEventListener('resize', resizeHandler); start();
+  window.__ssCleanup = () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resizeHandler); };
 }
 
 // ========================================================================
-// POLARIZATION — MALUS'S LAW (built from scratch)
+// POLARIZATION
 // ========================================================================
 function renderPolarization() {
   ROOT.innerHTML = `
-    <div class="lab-detail animate-fade-in">
-      <button class="back-btn" id="pol-back">← Back to Labs</button>
+    <div class="lab-detail anim-in">
+      <button class="back-btn" id="pol-back"><i class="fas fa-chevron-left"></i> Back</button>
       <div class="lab-detail-header">
-        <span class="lab-detail-icon">🔬</span>
+        <div class="lab-detail-icon"><i class="fas fa-wave-square"></i></div>
         <div>
           <h1>Polarization — Malus's Law</h1>
-          <p class="lab-detail-desc">Drag the dial to rotate the analyzer and observe how transmitted intensity changes.</p>
+          <p class="lab-detail-desc">Drag the dial to rotate the analyzer. I = I&#x2080; cos² &theta;</p>
         </div>
       </div>
-
       <div class="pol-layout">
-        <div class="pol-controls glass-card-static">
-          <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;font-weight:600;">Controls</div>
-          <div class="controls-row" style="flex-direction:column;gap:8px;">
+        <div class="pol-controls card-static">
+          <div style="font-size:10px;color:#5a6a8a;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:14px;font-weight:600;display:flex;align-items:center;gap:6px;"><i class="fas fa-sliders-h"></i> Controls</div>
+          <div class="controls-row" style="flex-direction:column;gap:10px;">
             <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:13px;color:var(--text-secondary);">Light Source</span>
-              <label class="toggle-label">
-                <input type="checkbox" checked id="pol-source">
-                <span class="toggle-track"><span class="toggle-thumb"></span></span>
-              </label>
+              <span style="font-size:12px;color:#5a6a8a;"><i class="fas fa-lightbulb" style="font-size:10px;color:#a855f7;"></i> Light Source</span>
+              <label class="toggle-label"> <input type="checkbox" checked id="pol-source"> <span class="toggle-track"><span class="toggle-thumb"></span></span> </label>
             </div>
             <div style="display:flex;align-items:center;justify-content:space-between;">
-              <span style="font-size:13px;color:var(--text-secondary);">Wavelength</span>
-              <span style="font-size:13px;font-family:var(--font-mono);color:var(--accent-cyan);" id="pol-wl-val">550 nm</span>
+              <span style="font-size:12px;color:#5a6a8a;"><i class="fas fa-palette" style="font-size:10px;color:#a855f7;"></i> Wavelength</span>
+              <span style="font-size:12px;font-family:JetBrains Mono,monospace;color:#a855f7;" id="pol-wl-val">550 nm</span>
             </div>
             <input type="range" min="400" max="700" value="550" step="1" id="pol-wl">
           </div>
         </div>
-
         <div class="pol-dial" id="pol-dial-container">
-          <svg width="140" height="140" viewBox="0 0 140 140" id="pol-dial-svg">
-            <circle cx="70" cy="70" r="58" fill="none" stroke="#1e2438" stroke-width="2"/>
+          <svg width="130" height="130" viewBox="0 0 130 130" id="pol-dial-svg">
+            <circle cx="65" cy="65" r="53" fill="none" stroke="#1a1d2e" stroke-width="2"/>
             <g id="pol-dial-face"></g>
-            <line id="pol-needle-fwd" x1="70" y1="70" x2="70" y2="13" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
-            <line id="pol-needle-bwd" x1="70" y1="70" x2="70" y2="87" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
-            <circle cx="70" cy="70" r="5" fill="#f59e0b"/>
+            <line id="pol-needle-fwd" x1="65" y1="65" x2="65" y2="13" stroke="#a855f7" stroke-width="3" stroke-linecap="round"/>
+            <line id="pol-needle-bwd" x1="65" y1="65" x2="65" y2="80" stroke="#a855f7" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
+            <circle cx="65" cy="65" r="5" fill="#a855f7"/>
           </svg>
-          <span style="font-size:13px;font-family:var(--font-mono);color:var(--accent-yellow);" id="pol-angle-display">0°</span>
+          <span class="pol-dial-value" id="pol-angle-display">0°</span>
         </div>
-
         <div class="pol-meter">
-          <div class="pol-meter-header"><span style="font-size:16px;">💡</span><span>Lux Meter</span></div>
+          <div class="pol-meter-header"><i class="fas fa-sun"></i><span>Lux Meter</span></div>
           <div class="pol-meter-value" id="pol-lux">100.0<small>lux</small></div>
-          <div class="pol-meter-bar"><div class="pol-meter-fill" id="pol-meter-fill" style="width:100%;background:linear-gradient(90deg,#854d0e,#eab308)"></div></div>
+          <div class="pol-meter-bar"><div class="pol-meter-fill" id="pol-meter-fill" style="width:100%;background:linear-gradient(90deg,#4c1d95,#a855f7)"></div></div>
           <div class="pol-meter-pct" id="pol-meter-pct">100%</div>
         </div>
       </div>
-
-      <div class="pol-canvas-wrapper glass-card-static">
+      <div class="pol-canvas-wrapper card-static">
         <canvas id="pol-canvas" style="width:100%;height:200px;display:block;"></canvas>
       </div>
-
-      <div class="pol-malus glass-card-static">
-        <span class="pol-malus-label">Malus's Law: I = I₀ cos² θ</span>
+      <div class="pol-malus card-static">
+        <span class="pol-malus-label"><i class="fas fa-sigma"></i> Malus: I = I₀ cos²&theta;</span>
         <span class="pol-malus-value" id="pol-malus">I = 1.000 × cos²(0°) = 1.000</span>
       </div>
-
-      <div class="lab-info glass-card-static">
-        <h3>About Polarization</h3>
-        <p>Polarization describes the orientation of the electric field oscillations in a light wave. Unpolarized light has electric field vectors in all transverse directions. A polarizer transmits only the component of light aligned with its transmission axis.</p>
-        <div class="info-formula">I = I₀ cos²(θ) &nbsp;&nbsp;—&nbsp;&nbsp; Malus's Law</div>
-        <p>At θ = 90° (crossed polarizers), no light is transmitted. Polarization by reflection occurs at Brewster's angle: tan(θ<sub>B</sub>) = n₂/n₁.</p>
-        <p><strong>Applications:</strong> 3D movies (polarized glasses), LCD screens, sunglasses (glare reduction), stress analysis.</p>
+      <div class="lab-info card-static">
+        <h3><i class="fas fa-flask"></i> About Polarization</h3>
+        <p>A polarizer transmits only the component aligned with its axis. At 90° no light passes.</p>
+        <div class="info-formula">I = I₀ cos²(&theta;)</div>
       </div>
     </div>
   `;
 
   document.getElementById('pol-back').addEventListener('click', () => navigate('labs'));
-
-  let angle = 0;
-  let sourceOn = true;
-  let wavelength = 550;
-  let animId = 0;
-  let startTime = 0;
-
-  const dialSvg = document.getElementById('pol-dial-svg');
-  const dialFace = document.getElementById('pol-dial-face');
-  const needleFwd = document.getElementById('pol-needle-fwd');
-  const needleBwd = document.getElementById('pol-needle-bwd');
-  const angleDisplay = document.getElementById('pol-angle-display');
-  const luxEl = document.getElementById('pol-lux');
-  const meterFill = document.getElementById('pol-meter-fill');
-  const meterPct = document.getElementById('pol-meter-pct');
-  const malusEl = document.getElementById('pol-malus');
-  const sourceToggle = document.getElementById('pol-source');
-  const wlSlider = document.getElementById('pol-wl');
-  const wlVal = document.getElementById('pol-wl-val');
+  let angle = 0, sourceOn = true, wavelength = 550, animId = 0, startTime = 0;
+  const dialSvg = document.getElementById('pol-dial-svg'), dialFace = document.getElementById('pol-dial-face');
+  const needleFwd = document.getElementById('pol-needle-fwd'), needleBwd = document.getElementById('pol-needle-bwd');
+  const angleDisplay = document.getElementById('pol-angle-display'), luxEl = document.getElementById('pol-lux');
+  const meterFill = document.getElementById('pol-meter-fill'), meterPct = document.getElementById('pol-meter-pct');
+  const malusEl = document.getElementById('pol-malus'), sourceToggle = document.getElementById('pol-source');
+  const wlSlider = document.getElementById('pol-wl'), wlVal = document.getElementById('pol-wl-val');
   const canvas = document.getElementById('pol-canvas');
 
   function wlToRGB(wl) {
-    let r = 0, g = 0, b = 0;
-    if (wl >= 380 && wl < 440) { r = -(wl - 440) / 60; g = 0; b = 1; }
-    else if (wl >= 440 && wl < 490) { r = 0; g = (wl - 440) / 50; b = 1; }
-    else if (wl >= 490 && wl < 510) { r = 0; g = 1; b = -(wl - 510) / 20; }
-    else if (wl >= 510 && wl < 580) { r = (wl - 510) / 70; g = 1; b = 0; }
-    else if (wl >= 580 && wl < 645) { r = 1; g = -(wl - 645) / 65; b = 0; }
-    else if (wl >= 645 && wl <= 780) { r = 1; g = 0; b = 0; }
-    const f = wl >= 380 && wl < 420 ? 0.3 + 0.7 * (wl - 380) / 40 : wl >= 420 && wl <= 700 ? 1 : 0.3 + 0.7 * (780 - wl) / 80;
-    return { r: Math.round(255 * (r * f) ** 0.8), g: Math.round(255 * (g * f) ** 0.8), b: Math.round(255 * (b * f) ** 0.8) };
+    let r=0,g=0,b=0;
+    if(wl>=380&&wl<440){r=-(wl-440)/60;g=0;b=1;}
+    else if(wl>=440&&wl<490){r=0;g=(wl-440)/50;b=1;}
+    else if(wl>=490&&wl<510){r=0;g=1;b=-(wl-510)/20;}
+    else if(wl>=510&&wl<580){r=(wl-510)/70;g=1;b=0;}
+    else if(wl>=580&&wl<645){r=1;g=-(wl-645)/65;b=0;}
+    else if(wl>=645&&wl<=780){r=1;g=0;b=0;}
+    const f=wl>=380&&wl<420?0.3+0.7*(wl-380)/40:wl>=420&&wl<=700?1:0.3+0.7*(780-wl)/80;
+    return{r:Math.round(255*(r*f)**0.8),g:Math.round(255*(g*f)**0.8),b:Math.round(255*(b*f)**0.8)};
   }
-
   function buildDialFace() {
-    const cx = 70, cy = 70, R = 58;
-    let h = '';
-    for (let i = 0; i < 360; i += 15) {
-      const a = i * Math.PI / 180;
-      const inR = i % 45 === 0 ? R - 14 : R - 6;
-      h += '<line x1="' + (cx + inR * Math.cos(a)) + '" y1="' + (cy + inR * Math.sin(a)) + '" x2="' + (cx + R * Math.cos(a)) + '" y2="' + (cy + R * Math.sin(a)) + '" stroke="#475569" stroke-width="' + (i % 45 === 0 ? 2 : 1) + '"/>';
-    }
-    [{d:0,l:'0°'},{d:90,l:'90°'},{d:180,l:'180°'},{d:270,l:'270°'}].forEach(function(o) {
-      const a = o.d * Math.PI / 180;
-      h += '<text x="' + (cx + (R + 16) * Math.cos(a)) + '" y="' + (cy + (R + 16) * Math.sin(a)) + '" text-anchor="middle" dominant-baseline="central" fill="#94a3b8" font-size="10" font-family="monospace">' + o.l + '</text>';
-    });
-    dialFace.innerHTML = h;
+    const cx=65,cy=65,R=53;let h='';
+    for(let i=0;i<360;i+=15){const a=i*Math.PI/180;const inR=i%45===0?R-12:R-5;h+='<line x1="'+(cx+inR*Math.cos(a))+'" y1="'+(cy+inR*Math.sin(a))+'" x2="'+(cx+R*Math.cos(a))+'" y2="'+(cy+R*Math.sin(a))+'" stroke="#475569" stroke-width="'+(i%45===0?2:1)+'"/>';}
+    [{d:0,l:'0°'},{d:90,l:'90°'},{d:180,l:'180°'},{d:270,l:'270°'}].forEach(function(o){const a=o.d*Math.PI/180;h+='<text x="'+(cx+(R+14)*Math.cos(a))+'" y="'+(cy+(R+14)*Math.sin(a))+'" text-anchor="middle" dominant-baseline="central" fill="#5a6a8a" font-size="9" font-family="monospace">'+o.l+'</text>';});
+    dialFace.innerHTML=h;
   }
-
-  function setNeedle(rad) {
-    const cx = 70, cy = 70, R = 58;
-    needleFwd.setAttribute('x2', cx + R * 0.75 * Math.cos(rad));
-    needleFwd.setAttribute('y2', cy + R * 0.75 * Math.sin(rad));
-    needleBwd.setAttribute('x2', cx - R * 0.3 * Math.cos(rad));
-    needleBwd.setAttribute('y2', cy - R * 0.3 * Math.sin(rad));
+  function setNeedle(rad){const cx=65,cy=65,R=53;needleFwd.setAttribute('x2',cx+R*0.75*Math.cos(rad));needleFwd.setAttribute('y2',cy+R*0.75*Math.sin(rad));needleBwd.setAttribute('x2',cx-R*0.3*Math.cos(rad));needleBwd.setAttribute('y2',cy-R*0.3*Math.sin(rad));}
+  function angleFromPoint(cx,cy,mx,my){let a=Math.atan2(my-cy,mx-cx);return a<0?a+2*Math.PI:a;}
+  function getDialCenter(){const r=dialSvg.getBoundingClientRect();return{cx:r.left+r.width/2,cy:r.top+r.height/2};}
+  function deg(rad){return((rad*180/Math.PI)%360+360)%360;}
+  function refresh(){const d=deg(angle);angleDisplay.textContent=d.toFixed(0)+'°';const I=sourceOn?Math.cos(angle)**2:0;const p=Math.round(I*100);luxEl.innerHTML=(I*100).toFixed(1)+'<small>lux</small>';meterFill.style.width=p+'%';meterFill.style.background=p>75?'linear-gradient(90deg,#7c3aed,#a855f7)':p>25?'linear-gradient(90deg,#4c1d95,#7c3aed)':'linear-gradient(90deg,#2e1065,#4c1d95)';meterPct.textContent=p+'%';malusEl.innerHTML='I = 1.000 × cos²('+d.toFixed(0)+'°) = '+I.toFixed(3);}
+  dialSvg.addEventListener('pointerdown',function(e){var c=getDialCenter();angle=angleFromPoint(c.cx,c.cy,e.clientX,e.clientY);setNeedle(angle);refresh();function onMove(e){e.preventDefault();var c2=getDialCenter();angle=angleFromPoint(c2.cx,c2.cy,e.clientX,e.clientY);setNeedle(angle);refresh();}function onUp(){window.removeEventListener('pointermove',onMove);window.removeEventListener('pointerup',onUp);}window.addEventListener('pointermove',onMove);window.addEventListener('pointerup',onUp);});
+  sourceToggle.addEventListener('change',function(e){sourceOn=e.target.checked;refresh();});
+  wlSlider.addEventListener('input',function(e){wavelength=Number(e.target.value);wlVal.textContent=wavelength+' nm';});
+  function setupCanvas(){const r=canvas.parentElement.getBoundingClientRect();canvas.width=r.width;canvas.height=200;}
+  function draw(ts){
+    if(!startTime)startTime=ts;const t=(ts-startTime)/1000;const ctx=canvas.getContext('2d');if(!ctx)return;
+    const W=canvas.width,H=canvas.height,xP=Math.round(W/3),xA=Math.round(2*W/3),cy=Math.round(H/2),amp=sourceOn?22:0,rgb=wlToRGB(wavelength),col='rgb('+rgb.r+','+rgb.g+','+rgb.b+')',d=deg(angle);
+    ctx.fillStyle='#0a0b10';ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='#1a1d2e';ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(xP,0);ctx.lineTo(xP,H);ctx.stroke();ctx.beginPath();ctx.moveTo(xA,0);ctx.lineTo(xA,H);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#5a6a8a';ctx.font='10px Space Grotesk,sans-serif';ctx.textAlign='center';ctx.fillText('Unpolarized',Math.round(W/6),14);ctx.fillText('Polarizer',xP,14);ctx.fillText('Analyzer @ '+d.toFixed(0)+'°',xA,14);ctx.font='9px Space Grotesk,sans-serif';ctx.fillText('Source',8,H-6);ctx.fillText('Polarizer',xP,H-6);ctx.fillText('Analyzer',xA,H-6);
+    ctx.strokeStyle='rgba('+rgb.r+','+rgb.g+','+rgb.b+',0.12)';ctx.lineWidth=0.5;for(var w=-4;w<=4;w++){var off=w*2.5;ctx.beginPath();for(var x=8;x<xP-6;x++){var y=cy+off+amp*0.3*Math.sin(x*0.06+t*3+w*0.8);x===8?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();}
+    ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.beginPath();for(var x=0;x<xA-xP-10;x++){var y=cy+amp*Math.sin((xP+8+x)*0.06+t*3);x===0?ctx.moveTo(xP+8,y):ctx.lineTo(xP+8+x,y);}ctx.stroke();
+    var tAmp=amp*Math.abs(Math.cos(angle));if(tAmp>0.5){ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.beginPath();for(var x=0;x<W-xA-10;x++){var y=cy+tAmp*Math.sin((xA+8+x)*0.06+t*3);x===0?ctx.moveTo(xA+8,y):ctx.lineTo(xA+8+x,y);}ctx.stroke();}
+    ctx.strokeStyle='rgba(90,106,138,0.25)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(W-2,0);ctx.lineTo(W-2,H);ctx.stroke();ctx.fillStyle='#5a6a8a';ctx.font='9px Space Grotesk,sans-serif';ctx.textAlign='center';ctx.fillText('Screen',W-2,H-6);
+    animId=requestAnimationFrame(draw);
   }
-
-  function angleFromPoint(cx, cy, mx, my) {
-    let a = Math.atan2(my - cy, mx - cx);
-    return a < 0 ? a + 2 * Math.PI : a;
-  }
-
-  function getDialCenter() {
-    const r = dialSvg.getBoundingClientRect();
-    return { cx: r.left + r.width / 2, cy: r.top + r.height / 2 };
-  }
-
-  function deg(rad) { return ((rad * 180 / Math.PI) % 360 + 360) % 360; }
-
-  function refresh() {
-    const d = deg(angle);
-    angleDisplay.textContent = d.toFixed(0) + '\u00B0';
-    const I = sourceOn ? Math.cos(angle) ** 2 : 0;
-    const p = Math.round(I * 100);
-    luxEl.innerHTML = (I * 100).toFixed(1) + '<small>lux</small>';
-    meterFill.style.width = p + '%';
-    meterFill.style.background = p > 75 ? 'linear-gradient(90deg,#eab308,#facc15)' : p > 25 ? 'linear-gradient(90deg,#854d0e,#eab308)' : 'linear-gradient(90deg,#451a03,#854d0e)';
-    meterPct.textContent = p + '%';
-    malusEl.textContent = 'I = 1.000 \u00D7 cos\u00B2(' + d.toFixed(0) + '\u00B0) = ' + I.toFixed(3);
-  }
-
-  dialSvg.addEventListener('pointerdown', function(e) {
-    var c = getDialCenter();
-    angle = angleFromPoint(c.cx, c.cy, e.clientX, e.clientY);
-    setNeedle(angle);
-    refresh();
-
-    function onMove(e) { e.preventDefault(); var c2 = getDialCenter(); angle = angleFromPoint(c2.cx, c2.cy, e.clientX, e.clientY); setNeedle(angle); refresh(); }
-    function onUp() { window.removeEventListener('pointermove', onMove); window.removeEventListener('pointerup', onUp); }
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
-  });
-
-  sourceToggle.addEventListener('change', function(e) { sourceOn = e.target.checked; refresh(); });
-
-  wlSlider.addEventListener('input', function(e) {
-    wavelength = Number(e.target.value);
-    wlVal.textContent = wavelength + ' nm';
-  });
-
-  function setupCanvas() {
-    const r = canvas.parentElement.getBoundingClientRect();
-    canvas.width = r.width;
-    canvas.height = 200;
-  }
-
-  function draw(ts) {
-    if (!startTime) startTime = ts;
-    const t = (ts - startTime) / 1000;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const W = canvas.width, H = canvas.height;
-    const xP = Math.round(W / 3), xA = Math.round(2 * W / 3), cy = Math.round(H / 2);
-    const amp = sourceOn ? 22 : 0;
-    const rgb = wlToRGB(wavelength);
-    const col = 'rgb(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ')';
-    const d = deg(angle);
-
-    ctx.fillStyle = '#060b18';
-    ctx.fillRect(0, 0, W, H);
-
-    ctx.strokeStyle = '#1e2438';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5,5]);
-    ctx.beginPath(); ctx.moveTo(xP,0); ctx.lineTo(xP,H); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(xA,0); ctx.lineTo(xA,H); ctx.stroke();
-    ctx.setLineDash([]);
-
-    ctx.fillStyle = '#64748b';
-    ctx.font = '10px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Unpolarized', Math.round(W/6), 14);
-    ctx.fillText('Polarizer', xP, 14);
-    ctx.fillText('Analyzer @ ' + d.toFixed(0) + '\u00B0', xA, 14);
-    ctx.font = '9px Inter, sans-serif';
-    ctx.fillText('Source', 8, H-6);
-    ctx.fillText('Polarizer', xP, H-6);
-    ctx.fillText('Analyzer', xA, H-6);
-
-    ctx.strokeStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',0.12)';
-    ctx.lineWidth = 0.5;
-    for (var w = -4; w <= 4; w++) {
-      var off = w * 2.5;
-      ctx.beginPath();
-      for (var x = 8; x < xP - 6; x++) {
-        var y = cy + off + amp * 0.3 * Math.sin(x * 0.06 + t * 3 + w * 0.8);
-        x === 8 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-    }
-
-    ctx.strokeStyle = col;
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    for (var x = 0; x < xA - xP - 10; x++) {
-      var y = cy + amp * Math.sin((xP + 8 + x) * 0.06 + t * 3);
-      x === 0 ? ctx.moveTo(xP + 8, y) : ctx.lineTo(xP + 8 + x, y);
-    }
-    ctx.stroke();
-
-    var tAmp = amp * Math.abs(Math.cos(angle));
-    if (tAmp > 0.5) {
-      ctx.strokeStyle = col;
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-      for (var x = 0; x < W - xA - 10; x++) {
-        var y = cy + tAmp * Math.sin((xA + 8 + x) * 0.06 + t * 3);
-        x === 0 ? ctx.moveTo(xA + 8, y) : ctx.lineTo(xA + 8 + x, y);
-      }
-      ctx.stroke();
-    }
-
-    ctx.strokeStyle = 'rgba(148,163,184,0.35)';
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(W-2,0); ctx.lineTo(W-2,H); ctx.stroke();
-    ctx.fillStyle = '#64748b';
-    ctx.font = '9px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('Screen', W-2, H-6);
-
-    animId = requestAnimationFrame(draw);
-  }
-
-  function start() {
-    cancelAnimationFrame(animId);
-    setupCanvas();
-    startTime = 0;
-    buildDialFace();
-    setNeedle(0);
-    refresh();
-    animId = requestAnimationFrame(draw);
-  }
-
-  var resizeHandler = function() { setupCanvas(); };
-  window.addEventListener('resize', resizeHandler);
-  start();
-
-  window.__polCleanup = function() {
-    cancelAnimationFrame(animId);
-    window.removeEventListener('resize', resizeHandler);
-  };
+  function start(){cancelAnimationFrame(animId);setupCanvas();startTime=0;buildDialFace();setNeedle(0);refresh();animId=requestAnimationFrame(draw);}
+  var resizeHandler=function(){setupCanvas();};window.addEventListener('resize',resizeHandler);start();
+  window.__polCleanup=function(){cancelAnimationFrame(animId);window.removeEventListener('resize',resizeHandler);};
 }
 
-// ---------- Initial render ----------
+function initSweep() {
+  const el = document.getElementById('brand-glow');
+  if (!el) return;
+  function fire() {
+    el.style.animation = 'none';
+    void el.offsetHeight;
+    el.style.animation = 'sweepText 0.7s cubic-bezier(0.16,1,0.3,1) forwards';
+    const nextDelay = 5000 + Math.random() * 5000;
+    setTimeout(fire, nextDelay);
+  }
+  setTimeout(fire, 2000);
+}
+initSweep();
 render();
-
 })();
 </script>
 </body>
